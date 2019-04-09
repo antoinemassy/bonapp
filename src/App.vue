@@ -1,78 +1,12 @@
 <template>
   <v-app id="inspire">
-    <v-toolbar
-      color="blue-grey"
-      dark
-      fixed
-      app
-      clipped-right
-    >
-      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-toolbar-title>Toolbar</v-toolbar-title>
-    </v-toolbar>
-    <v-navigation-drawer
-      v-model="drawer"
-      fixed
-      app
-      close
-    >
-      <v-list dense>
-        <v-list-tile @click.stop="left = !left">
-          <v-list-tile-action>
-            <v-icon>home</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Home</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-
-      <v-list dense>
-        <v-list-tile @click.stop="left = !left">
-          <v-list-tile-action>
-            <v-icon>description</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Fields</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-
-      <v-list dense>
-        <v-list-tile @click.stop="left = !left">
-          <v-list-tile-action>
-            <v-icon>event</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Subject</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-
-      <v-list dense>
-        <v-list-tile @click.stop="left = !left">
-          <v-list-tile-action>
-            <v-icon>exit_to_app</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Exit</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-
-    </v-navigation-drawer>
-
+    <Toolbar/>
     
-    <v-content>
-     <v-container>
-       
-     </v-container>
-    </v-content>
+        <Content/>
+   
 
-    
-    
     <v-footer color="blue-grey" class="white--text" app>
-      <span>Antoine</span>
+      <span>Ébène</span>
       <v-spacer></v-spacer>
       <span>&copy; 2019</span>
     </v-footer>
@@ -80,6 +14,8 @@
 </template>
 
 <script>
+import Content from './components/admin/template3.vue'
+import Toolbar from './components/admin/toolbar.vue'
 
   export default {
     data: () => ({
@@ -93,7 +29,8 @@
     },
     name: 'app',
   components: {
-    Subject
+    Content,
+    Toolbar
   },
   }
 </script>
