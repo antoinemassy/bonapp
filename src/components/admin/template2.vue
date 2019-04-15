@@ -1,39 +1,41 @@
 <template>
-  <v-container fill-height>
-    <v-layout row justify-center align-start>
-      <v-flex xs12 sm5>
-        <v-icon>description</v-icon>Template2020
-        <v-card>
-          <v-subheader>Nivaux de compétences</v-subheader>
-        </v-card>
-        <v-card>
-          <v-list>
-            <v-list-tile v-for="item in items" :key="item.title">
-              <v-list-tile-content>
-                <v-list-tile-title v-text="item.title"></v-list-tile-title>
-              </v-list-tile-content>
-              <v-list-tile-action>
-                  <v-list-tile-action-text v-text="item.note"> </v-list-tile-action-text>
-              </v-list-tile-action>    
-            </v-list-tile>
-          </v-list>
+  <v-container fluid grid-list-xl pt-0 pb-5>
+    <v-layout row justify-space-around mb-3 pt-0 mt-0>
+      <v-flex md3 xs4>
+        <v-card color="accent" class="white--text">
+          <v-card-title class="justify-center" primary-title>
+            <div class="headline">{{template.name}}</div>
+          </v-card-title>
         </v-card>
       </v-flex>
+    </v-layout>
+
+    <v-layout row justify-space-around>
+      <v-card></v-card>
+      <Niveaux/>
+      <Semestres/>
+      <v-card></v-card>
+    </v-layout>
+    <v-layout row justify-space-around pt-3>
+      <Composantes/>
     </v-layout>
   </v-container>
 </template>
 
+
 <script>
+import Niveaux from "./template2/niveaux.vue";
+import Semestres from "./template2/semestres.vue";
+import Composantes from "./template2/composantes.vue";
+
 export default {
-  data() {
-    return {
-      items: [
-        { title: "Non acquis", note: "5" },
-        { title: "Loin", note: "10" },
-        { title: "Proche", note: "15" }
-      ]
-    };
-  },
-  methods: {}
+  data: () => ({
+    template: { name: "Template 2020" }
+  }),
+  components: {
+    Niveaux,
+    Semestres,
+    Composantes
+  }
 };
 </script>

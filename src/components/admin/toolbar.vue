@@ -1,7 +1,7 @@
 <template>
 <v-content>
     <v-toolbar
-      color="blue-grey"
+      color="primary"
       dark
       fixed
       app
@@ -39,12 +39,12 @@
       </v-list>
 
       <v-list dense>
-        <v-list-tile @click.stop="left = !left">
+        <v-list-tile @click.stop="left = !left" :to="{path: '/admin/template'}">
           <v-list-tile-action>
             <v-icon>description</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>Templates</v-list-tile-title>
+            <v-list-tile-title >Templates</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>

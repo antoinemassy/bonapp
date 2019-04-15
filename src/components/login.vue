@@ -1,16 +1,11 @@
 <template>
     <v-content>
-        <v-img
-            :src="require('../assets/bonapp.png')"
-            contain
-            height="100"
-        ></v-img>
       <v-container fluid fill-height>
         <v-layout align-center justify-center>
             
           <v-flex xs12 sm8 md6>
             <v-card class="elevation-12">
-              <v-toolbar dark color="blue-grey">
+              <v-toolbar dark color="primary">
                 <v-toolbar-title>Connexion à Bon APP</v-toolbar-title>
               </v-toolbar>
               <v-card-text>
@@ -21,7 +16,7 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary">Connexion</v-btn>
+                <v-btn color="accent">Connexion</v-btn>
               </v-card-actions>
             </v-card>
           </v-flex>

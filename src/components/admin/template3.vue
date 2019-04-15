@@ -1,16 +1,34 @@
 <template>
-  <v-container fill-height>
-    <v-layout row justify-center align-start>
-      <v-flex xs12 sm5>
-      <div>
-        <v-toolbar flat color="white">
-          <v-toolbar-title>Niveaux de compétences</v-toolbar-title>
+  <v-container fluid grid-list-xl pt-0 pb-5>
+    <v-layout row justify-space-around mb-3 pt-0 mt-0>
+      <v-flex  md3>
+        <v-card color="accent" class="white--text">
+          <v-card-title class="justify-center" primary-title>
+            <div class="headline">{{template.name}}</div>
+          </v-card-title>
+        </v-card>
+      </v-flex>
+      <v-flex  md6>
+        <v-card color="accent" class="white--text">
+          <v-card-title class="justify-center" primary-title>
+            <div class="headline">{{composante.name}}</div>
+          </v-card-title>
+        </v-card>
+      </v-flex>
+    </v-layout>
+    <v-layout row justify-space-around >
+        <v-flex md11 xs12>
+    <template>
+      <div v-for="(item, index) in familles" :key="item.id">
+        <v-toolbar flat color="secondary">
+          <v-toolbar-title>{{familles[index].name}}</v-toolbar-title>
           <v-divider class="mx-2" inset vertical></v-divider>
           <v-spacer></v-spacer>
-          <v-dialog v-model="dialog" max-width="500px">
+          <v-dialog v-model="dialog" max-width="1000px">
             <template v-slot:activator="{ on }">
-              
-              <v-btn v-on="on"><v-icon color="grey lighten">add_circle</v-icon></v-btn>
+              <v-btn v-on="on">
+                <v-icon color="grey lighten">add_circle</v-icon>
+              </v-btn>
             </template>
             <v-card>
               <v-card-title>
@@ -20,11 +38,14 @@
               <v-card-text>
                 <v-container grid-list-md>
                   <v-layout wrap>
-                    <v-flex xs12 sm6 md4>
-                      <v-text-field v-model="editedItem.name" label="Niveau"></v-text-field>
+                    <v-flex xs12 sm6 md2>
+                      <v-text-field v-model="editedItem.name" label="Competence name"></v-text-field>
                     </v-flex>
-                    <v-flex xs12 sm6 md4>
-                      <v-text-field v-model="editedItem.notes" label="Note"></v-text-field>
+                    <v-flex xs12 sm6 md8>
+                      <v-textarea v-model="editedItem.description" label="Description"></v-textarea>
+                    </v-flex>
+                    <v-flex xs12 sm6 md2>
+                      <v-text-field v-model="editedItem.coefficient" label="Coefficient"></v-text-field>
                     </v-flex>
                   </v-layout>
                 </v-container>
@@ -38,14 +59,14 @@
             </v-card>
           </v-dialog>
         </v-toolbar>
-
-        <v-data-table :headers="headers" :items="niveaux"   hide-actions  class="elevation-1">
+        <v-data-table :headers="headers" :items="competences" hide-actions class="elevation-1">
           <template v-slot:items="props">
-            <td>{{ props.item.name }} </td>
-            <td>{{ props.item.notes }}</td>
-            <td >
+            <td>{{ props.item.name }}</td>
+            <td>{{ props.item.description }}</td>
+            <td>{{ props.item.coefficient }}</td>
+            <td class="justify-end layout px-4">
               <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
-              <v-icon small @click="deleteItem(props.item)">delete</v-icon>
+              <v-icon small class="mr-2" @click="deleteItem(props.item)">delete</v-icon>
             </td>
           </template>
           <template v-slot:no-data>
@@ -53,7 +74,9 @@
           </template>
         </v-data-table>
       </div>
-      </v-flex>
+      
+    </template>
+        </v-flex>
     </v-layout>
   </v-container>
 </template>
@@ -62,31 +85,37 @@
 export default {
   data: () => ({
     dialog: false,
+    template: { name: "Template 2020" },
+    composante: { name: "Compétences générales (Informatique et Télécom)" },
     headers: [
       {
-        text: "Niveau",
+        text: "Compétence",
         align: "left",
         sortable: false,
         value: "name"
       },
-      { text: "Note", value: "notes" },
-      { text: "Actions", value: "name", sortable: false }
+      { text: "Description", value: "description" },
+      { text: "Coefficient", value: "coefficient" },
+      { text: "Actions", align: "right", value: "name", sortable: false }
     ],
-    niveaux: [],
+    familles: [],
+    competences:[],
     editedIndex: -1,
     editedItem: {
       name: "",
-      notes: 0
+      description:"",
+      coefficient: 0
     },
     defaultItem: {
       name: "",
-      notes: 0
+      description:"",
+      coefficient: 0
     }
   }),
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "Nouveau niveau" : "Editer niveau";
+      return this.editedIndex === -1 ? "New Item" : "Edit Item";
     }
   },
 
@@ -102,32 +131,35 @@ export default {
 
   methods: {
     initialize() {
-      this.niveaux = [
-        {
-          name: "Non acquis",
-          notes: 5
-        },
-        {
-          name: "Loin",
-          notes: 10
-        },
-        {
-          name: "Proche",
-          notes: 15
-        }
+      this.familles = [
+        {name : 'Agir en communiquant '},
+        {name : 'Vivre '}
+      ]
+
+      this.competences =[
+          {
+              name: "Communiquer à l'oral",
+              description: "Il est tres important de bien savoir communiquer à l'oral pour se faire comprendre par son entrourage... ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+              coefficient: 1
+            },
+            {
+              name: "Communiquer à l'écrit",
+              description: "- fournir le schéma fonctionnel d’un système d’analyse de signaux numériques  - Identifier les principales fonctions et fournir un schéma-bloc - Prendre en compte les contraintes d’implémentation - fournir le schéma fonctionnel d’un système d’analyse de signaux numériques",
+              coefficient: 2
+            }
       ];
     },
 
     editItem(item) {
-      this.editedIndex = this.niveaux.indexOf(item);
+      this.editedIndex = this.competences.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
 
     deleteItem(item) {
-      const index = this.niveaux.indexOf(item);
+      const index = this.competences.indexOf(item);
       confirm("Are you sure you want to delete this item?") &&
-        this.niveaux.splice(index, 1);
+        this.competences.splice(index, 1);
     },
 
     close() {
@@ -140,9 +172,9 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.niveaux[this.editedIndex], this.editedItem);
+        Object.assign(this.competences[this.editedIndex], this.editedItem);
       } else {
-        this.niveaux.push(this.editedItem);
+        this.competences.push(this.editedItem);
       }
       this.close();
     }

@@ -1,11 +1,7 @@
 <template>
   <v-app id="inspire">
-    <Toolbar/>
-    
-        <Content/>
-   
-
-    <v-footer color="blue-grey" class="white--text" app>
+   <router-view></router-view>
+    <v-footer color="primary" class="white--text" app>
       <span>Ébène</span>
       <v-spacer></v-spacer>
       <span>&copy; 2019</span>
@@ -14,8 +10,6 @@
 </template>
 
 <script>
-import Content from './components/admin/template3.vue'
-import Toolbar from './components/admin/toolbar.vue'
 
   export default {
     data: () => ({
@@ -29,8 +23,7 @@ import Toolbar from './components/admin/toolbar.vue'
     },
     name: 'app',
   components: {
-    Content,
-    Toolbar
-  },
+
+  }
   }
 </script>
