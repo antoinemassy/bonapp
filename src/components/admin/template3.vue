@@ -63,7 +63,7 @@
           <template v-slot:items="props">
             <td>{{ props.item.name }}</td>
             <td>{{ props.item.description }}</td>
-            <td>{{ props.item.coefficient }}</td>
+            <td class="text-xs-center">{{ props.item.coefficient }}</td>
             <td class="justify-end layout px-4">
               <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
               <v-icon small class="mr-2" @click="deleteItem(props.item)">delete</v-icon>

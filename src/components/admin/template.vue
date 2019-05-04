@@ -53,7 +53,7 @@ export default {
     };
   },
   created() {
-    this.initialize();
+    this.initialize()
   },
   methods: {
     feetTemplates: function(){

@@ -76,7 +76,7 @@
             <td>{{ props.item.name }}</td>
           <td>{{ props.item.coefficients }}</td>
           <td>{{ props.item.semestres }}</td>
-          <td>
+          <td class="text-xs-right">
             <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
             <v-icon small class="mr-2" @click="deleteItem(props.item)">delete</v-icon>
             <v-icon small class="mr-2" @click="open(props.item)">open_in_new</v-icon>
@@ -107,7 +107,7 @@ export default {
       },
       { text: "Coefficient", value: "coefficients", sortable: false },
       { text: "Semestre", value: "semestres" },
-      { text: "Actions", value: "name", sortable: false }
+      { text: "Actions",align: "center", value: "name", sortable: false }
     ],
     composantes: [],
     familles:[],

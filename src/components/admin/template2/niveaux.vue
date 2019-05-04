@@ -41,8 +41,8 @@
         <v-data-table :headers="headers" :items="niveaux"   hide-actions  class="elevation-1">
           <template v-slot:items="props">
             <td>{{ props.item.name }} </td>
-            <td>{{ props.item.notes }}</td>
-            <td >
+            <td class="text-xs-center"> {{ props.item.notes }}</td>
+            <td class="text-xs-right">
               <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
               <v-icon small @click="deleteItem(props.item)">delete</v-icon>
             </td>
@@ -68,8 +68,8 @@ export default {
         sortable: false,
         value: "name"
       },
-      { text: "Note", value: "notes" },
-      { text: "Actions", value: "name", sortable: false }
+      { text: "Note", align: "center",value: "notes" },
+      { text: "Actions", align: "right", value: "name", sortable: false }
     ],
     niveaux: [],
     editedIndex: -1,
