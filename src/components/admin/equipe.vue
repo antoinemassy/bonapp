@@ -1,14 +1,13 @@
 <template>
   <v-item-group>
     <v-container grid-list-md>
-        <v-layout row justify-center mb-0 pt-0 mt-0>
-        <v-flex md3 xs4>
-        <v-select :items="promotions" item-text="name" label="Promotion" solo-inverted ></v-select>
-        </v-flex>
-        <v-flex md3 xs4>
-        <v-select :items="equipes" item-text="name" label="Equipe" solo-inverted ></v-select>
-        </v-flex>
-        </v-layout>
+      <v-switch
+        v-model="switch1"
+        true-value="Synthèse"
+        false-value="Ensemble"
+        :label="`Vue: ${switch1.toString()}`"
+      ></v-switch>
+
       <v-layout row justify-space-around mb-4 pt-0 mt-0>
         <v-flex md3 xs4>
           <v-card color="accent" class="white--text">
@@ -18,6 +17,16 @@
           </v-card>
         </v-flex>
       </v-layout>
+
+      <v-layout row justify-center mb-0 pt-0 mt-2>
+        <v-flex md2 xs4>
+          <v-select :items="promotions" item-text="name" label="Promotion" solo-inverted></v-select>
+        </v-flex>
+        <v-flex md2 xs4>
+          <v-select :items="equipes" item-text="name" label="Equipe" solo-inverted></v-select>
+        </v-flex>
+      </v-layout>
+
       <v-layout wrap>
         <v-flex v-for="n in etudiants" :key="n" xs12 md4 mb-4>
           <v-item>
@@ -32,6 +41,21 @@
                   </v-list-tile-content>
                 </v-list-tile>
                 <v-divider></v-divider>
+
+                <div v-for="i in semestres" :key="i">
+                  <v-list-tile v-for="j in i.composantes" :key="j">
+                    <v-list-tile-content>{{j}}:</v-list-tile-content>
+                    <v-list-tile-content class="align-end">TBD</v-list-tile-content>
+                  </v-list-tile>
+
+                 <v-list-tile>
+                    <v-list-tile-content>{{i.name}}</v-list-tile-content>
+                    <v-list-tile-content class="align-end">TBD</v-list-tile-content>
+                  </v-list-tile>
+              
+                  <v-divider></v-divider>
+                </div>
+
                 <v-list dense>
                   <v-list-tile>
                     <v-list-tile-content>Général E-S:</v-list-tile-content>
@@ -45,11 +69,14 @@
                     <v-list-tile-content>Signal:</v-list-tile-content>
                     <v-list-tile-content class="align-end">{{ n.signalGrade }}</v-list-tile-content>
                   </v-list-tile>
-                  <v-list-tile v-if="moyenneS1(n)>=10 && minS1(n)>8" class="green">
+                  <v-list-tile
+                    v-if="moyenneS1(n)>=10 && minS1(n)>8"
+                    style="border:2px solid lightgreen;"
+                  >
                     <v-list-tile-content>Semestre 1 :</v-list-tile-content>
                     <v-list-tile-content class="align-end">{{moyenneS1(n)}}</v-list-tile-content>
                   </v-list-tile>
-                  <v-list-tile v-else class="red">
+                  <v-list-tile v-else style="border:2px solid lightcoral;">
                     <v-list-tile-content>Semestre 1 :</v-list-tile-content>
                     <v-list-tile-content class="align-end">{{moyenneS1(n)}}</v-list-tile-content>
                   </v-list-tile>
@@ -66,11 +93,14 @@
                     <v-list-tile-content>Télécom:</v-list-tile-content>
                     <v-list-tile-content class="align-end">{{ n.telecomGrade }}</v-list-tile-content>
                   </v-list-tile>
-                  <v-list-tile v-if="moyenneS2(n)>=10 && minS2(n)>8" class="green">
+                  <v-list-tile
+                    v-if="moyenneS2(n)>=10 && minS2(n)>8"
+                    style="border:2px solid lightgreen;"
+                  >
                     <v-list-tile-content>Semestre 2 :</v-list-tile-content>
                     <v-list-tile-content class="align-end">{{moyenneS2(n)}}</v-list-tile-content>
                   </v-list-tile>
-                  <v-list-tile v-else class="red">
+                  <v-list-tile v-else style="border:2px solid lightcoral;">
                     <v-list-tile-content>Semestre 2 :</v-list-tile-content>
                     <v-list-tile-content class="align-end">{{moyenneS2(n)}}</v-list-tile-content>
                   </v-list-tile>
@@ -79,11 +109,14 @@
                     <v-list-tile-content>Intégration:</v-list-tile-content>
                     <v-list-tile-content class="align-end">{{ n.integrationGrade }}</v-list-tile-content>
                   </v-list-tile>
-                  <v-list-tile v-if="moyenneS3(n)>=10 && minS3(n)>8" class="green">
+                  <v-list-tile
+                    v-if="moyenneS3(n)>=10 && minS3(n)>8"
+                    style="border:2px solid lightgreen;"
+                  >
                     <v-list-tile-content>Semestre 3 :</v-list-tile-content>
                     <v-list-tile-content class="align-end">{{moyenneS3(n)}}</v-list-tile-content>
                   </v-list-tile>
-                  <v-list-tile v-else class="red">
+                  <v-list-tile v-else style="border:2px solid lightcoral;">
                     <v-list-tile-content>Semestre 3 :</v-list-tile-content>
                     <v-list-tile-content class="align-end">{{moyenneS3(n)}}</v-list-tile-content>
                   </v-list-tile>
@@ -100,21 +133,23 @@
 <script>
 export default {
   data: () => ({
-    test:{
-      name:"GESGrade"
+    switch1: "Synthèse",
+    test: {
+      name: "GESGrade"
     },
-    equipes: [
-      "G1A",
-      "G1B",
-      "G2A",
-      "G3A",
-      "G3B",
-      "G3C",
-      "G4A"
-    ],
+    equipes: ["G1A", "G1B", "G2A", "G3A", "G3B", "G3C", "G4A"],
     promotions: [{ name: "Promotion 2020" }, { name: "Promotion 2021" }],
     equipe: { name: "G1A" },
-    semestre1:["GESGrade", "electroniqueGrade", "signalGrade"],
+    semestres: [
+      {
+        name: "Semestre 1",
+        composantes: ['Général E-S', 'Éléctronique', 'Signal']
+      },
+      { name: "Semestre 2",
+        composantes: ['Générales I-T', 'Informatique', 'Télécom']},
+      { name: "Semestre 3",
+        composantes: ['Intégration'] }
+    ],
     etudiants: [
       {
         prenom: "Leo",
@@ -177,8 +212,7 @@ export default {
         integrationGrade: 12
       }
     ]
-  })
-  ,
+  }),
   methods: {
     moyenneS1: function(n) {
       return (n.GESGrade + n.electroniqueGrade + n.signalGrade) / 3;

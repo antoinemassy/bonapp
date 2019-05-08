@@ -1,6 +1,6 @@
 <template>
   <v-container fill-height>
-    <v-layout row justify-center align-start>
+    <v-layout row justify-center align-start mt-3>
       <v-flex xs12 sm5 md7>
         <v-card>
           <v-subheader>Sélectionner un promotion</v-subheader>

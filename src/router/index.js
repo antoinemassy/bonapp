@@ -10,6 +10,10 @@ import Groupe2 from '../components/admin/groupe2.vue'
 import Groupe3 from '../components/admin/groupe3.vue'
 import Equipe from '../components/admin/equipe.vue'
 import Equipe2 from '../components/admin/equipe2.vue'
+import Tuteur from '../components/tuteur/tuteur.vue'
+import Etudiants from '../components/tuteur/etudiants.vue'
+import Groupes from '../components/tuteur/groupes.vue'
+import Groupes2 from '../components/tuteur/groupes2.vue'
 
 Vue.use(VueRouter)
 export default new VueRouter({
@@ -30,12 +34,12 @@ export default new VueRouter({
                 component: Template,
             },
             {
-                path: '/admin/template2',
+                path: '/admin/template/:_id',
                 name: 'Template2',
                 component: Template2,
             },
             {
-                path: '/admin/template3',
+                path: '/admin/template/:idTemplate/famille/:idTemplate',
                 name: 'Template3',
                 component: Template3,
             },
@@ -64,6 +68,28 @@ export default new VueRouter({
                 path: '/admin/equipe2',
                 name: 'Equipe2',
                 component: Equipe2,
+            }
+        ]
+    },
+    {
+        path: '/tuteur',
+        name: 'Tuteur',
+        component: Tuteur,
+        children:[
+            {
+                path: '/tuteur/etudiants',
+                name: 'Etudiants',
+                component: Etudiants,
+            },
+            {
+                path: '/tuteur/groupes',
+                name: 'Groupes',
+                component: Groupes,
+            },
+            {
+                path: '/tuteur/groupes2',
+                name: 'Groupes2',
+                component: Groupes2,
             }
         ]
     },

@@ -46,7 +46,7 @@
                       multiple
                     >
                       <template v-slot:selection="data">
-                        <v-chip :selected="data.selected" close @input="remove(data.item)">
+                        <v-chip :selected="data.selected" close @input="data.parent.selectItem(data.item)">
                           <strong>{{ data.item }}</strong>&nbsp;
                         </v-chip>
                       </template>
@@ -146,38 +146,7 @@ export default {
   },
 
   methods: {
-    initialize() {
-      this.composantes = [
-        {
-          id: 1,
-          name: "Compétences générales (Informatique et Télécom)",
-          coefficients: 1,
-          semestres: "Semestre 2",
-          familles: [
-            "Agir en bon communicant dans un environnement scientifique et technique",
-            "Agir en acteur efficace dans un groupe",
-            "Agir en professionel responsable"
-          ]
-        },
-        {
-          id: 2,
-          name: "Informatique",
-          coefficients: 2,
-          semestres: "Semestre 1",
-          familles: [
-            "Agir en bon communicant dans un environnement scientifique et technique"
-          ]
-        },
-        {
-          id: 3,
-          name: "Télécom",
-          coefficients: 1,
-          semestres: "Semestre 2"
-        }
-      ]
-    ,
-    this.semestres= [{ name: "Semestre 1" }, { name: "Semestre 2" }]
-    },
+     
 
     editItem(item) {
       this.editedIndex = this.composantes.indexOf(item);
@@ -215,9 +184,6 @@ export default {
         this.composantes.push(this.editedItem);
       }
       this.close();
-    },
-    getfamilles() {
-      return this.familles;
     }
   }
 };

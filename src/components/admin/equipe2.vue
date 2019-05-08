@@ -1,14 +1,13 @@
 <template>
   <v-item-group>
     <v-container grid-list-md>
-        <v-layout row justify-center mb-0 pt-0 mt-0>
-        <v-flex md3 xs4>
-        <v-select :items="promotions" item-text="name" label="Promotion" solo-inverted ></v-select>
-        </v-flex>
-        <v-flex md3 xs4>
-        <v-select :items="equipes" item-text="name" label="Equipe" solo-inverted ></v-select>
-        </v-flex>
-        </v-layout>
+      <v-switch
+        v-model="switch1"
+        true-value="Synthèse"
+        false-value="Ensemble"
+        :label="`Vue: ${switch1.toString()}`"
+      ></v-switch>
+
       <v-layout row justify-space-around mb-4 pt-0 mt-0>
         <v-flex md3 xs4>
           <v-card color="accent" class="white--text">
@@ -18,6 +17,22 @@
           </v-card>
         </v-flex>
       </v-layout>
+
+      <v-layout row justify-center mb-0 pt-0 mt-2>
+        <v-flex md2 xs4>
+          <v-select :items="promotions" item-text="name" label="Promotion" solo-inverted></v-select>
+        </v-flex>
+        <v-flex md2 xs4>
+          <v-select :items="equipes" item-text="name" label="Equipe" solo-inverted></v-select>
+        </v-flex>
+      </v-layout>
+
+       <v-layout row justify-center >
+        <v-flex md2 xs4>
+          <v-select :items="semestres"  label="Semestre" solo-inverted></v-select>
+        </v-flex>
+      </v-layout>
+
       <v-layout wrap>
         <v-flex v-for="n in etudiants" :key="n" xs12 md4 mb-4>
           <v-item>
@@ -32,62 +47,21 @@
                   </v-list-tile-content>
                 </v-list-tile>
                 <v-divider></v-divider>
-                <v-list dense>
+
+                <div v-for="i in semestre1" :key="i">
                   <v-list-tile>
-                    <v-list-tile-content>Général E-S:</v-list-tile-content>
-                    <v-list-tile-content class="align-end">{{ n.GESGrade }}</v-list-tile-content>
+                    <v-list-tile-content style="font-weight:bold">{{i.name}}</v-list-tile-content>
+                    <v-list-tile-content class="align-end" style="font-weight:bold">TBD</v-list-tile-content>
                   </v-list-tile>
-                  <v-list-tile>
-                    <v-list-tile-content>Éléctronique:</v-list-tile-content>
-                    <v-list-tile-content class="align-end">{{ n.electroniqueGrade }}</v-list-tile-content>
-                  </v-list-tile>
-                  <v-list-tile>
-                    <v-list-tile-content>Signal:</v-list-tile-content>
-                    <v-list-tile-content class="align-end">{{ n.signalGrade }}</v-list-tile-content>
-                  </v-list-tile>
-                  <v-list-tile v-if="moyenneS1(n)>=10 && minS1(n)>8" class="green">
-                    <v-list-tile-content>Semestre 1 :</v-list-tile-content>
-                    <v-list-tile-content class="align-end">{{moyenneS1(n)}}</v-list-tile-content>
-                  </v-list-tile>
-                  <v-list-tile v-else class="red">
-                    <v-list-tile-content>Semestre 1 :</v-list-tile-content>
-                    <v-list-tile-content class="align-end">{{moyenneS1(n)}}</v-list-tile-content>
+
+                  <v-list-tile v-for="j in i.competences" :key="j">
+                    <v-list-tile-content>{{j}}:</v-list-tile-content>
+                    <v-list-tile-content class="align-end">TBD</v-list-tile-content>
                   </v-list-tile>
                   <v-divider></v-divider>
-                  <v-list-tile>
-                    <v-list-tile-content>Générales I-T:</v-list-tile-content>
-                    <v-list-tile-content class="align-end">{{ n.GITGrade }}</v-list-tile-content>
-                  </v-list-tile>
-                  <v-list-tile>
-                    <v-list-tile-content>Informatique:</v-list-tile-content>
-                    <v-list-tile-content class="align-end">{{ n.informatiqueGrade }}</v-list-tile-content>
-                  </v-list-tile>
-                  <v-list-tile>
-                    <v-list-tile-content>Télécom:</v-list-tile-content>
-                    <v-list-tile-content class="align-end">{{ n.telecomGrade }}</v-list-tile-content>
-                  </v-list-tile>
-                  <v-list-tile v-if="moyenneS2(n)>=10 && minS2(n)>8" class="green">
-                    <v-list-tile-content>Semestre 2 :</v-list-tile-content>
-                    <v-list-tile-content class="align-end">{{moyenneS2(n)}}</v-list-tile-content>
-                  </v-list-tile>
-                  <v-list-tile v-else class="red">
-                    <v-list-tile-content>Semestre 2 :</v-list-tile-content>
-                    <v-list-tile-content class="align-end">{{moyenneS2(n)}}</v-list-tile-content>
-                  </v-list-tile>
-                  <v-divider></v-divider>
-                  <v-list-tile>
-                    <v-list-tile-content>Intégration:</v-list-tile-content>
-                    <v-list-tile-content class="align-end">{{ n.integrationGrade }}</v-list-tile-content>
-                  </v-list-tile>
-                  <v-list-tile v-if="moyenneS3(n)>=10 && minS3(n)>8" class="green">
-                    <v-list-tile-content>Semestre 3 :</v-list-tile-content>
-                    <v-list-tile-content class="align-end">{{moyenneS3(n)}}</v-list-tile-content>
-                  </v-list-tile>
-                  <v-list-tile v-else class="red">
-                    <v-list-tile-content>Semestre 3 :</v-list-tile-content>
-                    <v-list-tile-content class="align-end">{{moyenneS3(n)}}</v-list-tile-content>
-                  </v-list-tile>
-                </v-list>
+                </div>
+
+               
               </div>
             </v-card>
           </v-item>
@@ -100,25 +74,36 @@
 <script>
 export default {
   data: () => ({
-    equipes: [
-      "G1A",
-      "G1B",
-      "G2A",
-      "G3A",
-      "G3B",
-      "G3C",
-      "G4A"
-    ],
+    switch1: "Synthèse",
+    test: {
+      name: "GESGrade"
+    },
+    equipes: ["G1A", "G1B", "G2A", "G3A", "G3B", "G3C", "G4A"],
     promotions: [{ name: "Promotion 2020" }, { name: "Promotion 2021" }],
     equipe: { name: "G1A" },
+    semestres: ["Semestre 1", "Semestre 2"],
+    semestre1: [
+      {
+        name: "Général E-S",
+        competences: ["Communiquer", "Ecrire", "Travailler"]
+      },
+      {
+        name: "Éléctronique",
+        competences: ["Communiquer", "Ecrire", "Test d'elec"]
+      },
+      {
+        name: "Signal",
+        competences: ["Communiquer Signal", "Ecrire"]
+      }
+    ],
     etudiants: [
       {
         prenom: "Leo",
         nom: "Dupont",
         studentNumber: 159,
-        GESGrade: 12,
-        electroniqueGrade: 13,
-        signalGrade: 11,
+        GESGrade: 10,
+        electroniqueGrade: 10,
+        signalGrade: 10,
         GITGrade: 12,
         informatiqueGrade: 12,
         telecomGrade: 3,
@@ -172,10 +157,8 @@ export default {
         telecomGrade: 14,
         integrationGrade: 12
       }
-    ],
-    composantes:[{name:"General I-T", competences:["Communiquer", "Ecrire", "Travailler"]}, {name:"Informatique", competences:["Communiquer", "Travailler"]}, {name:"Télécom", competences:["Ecrire", "Travailler"]}],
-  })
-  ,
+    ]
+  }),
   methods: {
     moyenneS1: function(n) {
       return (n.GESGrade + n.electroniqueGrade + n.signalGrade) / 3;

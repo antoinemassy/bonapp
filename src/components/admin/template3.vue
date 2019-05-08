@@ -1,6 +1,6 @@
 <template>
   <v-container fluid grid-list-xl pt-0 pb-5>
-    <v-layout row justify-space-around mb-3 pt-0 mt-0>
+    <v-layout row justify-space-around mb-3 pt-0 mt-4>
       <v-flex  md3>
         <v-card color="accent" class="white--text">
           <v-card-title class="justify-center" primary-title>
