@@ -81,7 +81,7 @@ export default {
     equipes: ["G1A", "G1B", "G2A", "G3A", "G3B", "G3C", "G4A"],
     promotions: [{ name: "Promotion 2020" }, { name: "Promotion 2021" }],
     equipe: { name: "G1A" },
-    semestres: ["Semestre 1", "Semestre 2"],
+    semestres: ["Semestre 1", "Semestre 2", "Intégration"],
     semestre1: [
       {
         name: "Général E-S",

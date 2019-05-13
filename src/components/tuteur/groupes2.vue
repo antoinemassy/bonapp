@@ -4,7 +4,7 @@
       <v-flex md2 xs4>
         <v-card color="accent" class="white--text">
           <v-card-title class="justify-center" primary-title>
-            <div class="headline">{{equipe}}</div>
+            <div class="headline">Equipe {{equipe}}</div>
           </v-card-title>
         </v-card>
       </v-flex>
@@ -12,7 +12,7 @@
 
     <v-layout row justify-center mt-1>
       <v-flex md2 xs4>
-        <v-select :items="composantes" item-text="name" label="Compsante" solo-inverted></v-select>
+        <v-select :items="composantes" item-text="name" label="Composante" solo-inverted></v-select>
       </v-flex>
     </v-layout>
 
@@ -21,23 +21,15 @@
         <v-flex md4>
           <div>
             <v-toolbar flat color="secondary">
-              <v-toolbar-title>Groupes</v-toolbar-title>
+              <v-toolbar-title>Familles</v-toolbar-title>
               <v-divider class="mx-2" inset vertical></v-divider>
               <v-spacer></v-spacer>
-              <v-text-field
-                v-model="search"
-                append-icon="search"
-                label="Search"
-                single-line
-                hide-details
-              ></v-text-field>
             </v-toolbar>
 
             <v-data-table
               :headers="headers"
-              :items="groupes"
+              :items="familles"
               :expand="expand"
-              :search="search"
               hide-actions
               item-key="name"
               class="elevation-1"
@@ -72,9 +64,8 @@
 <script>
 export default {
   data: () => ({
-    search: "",
     equipe:"",
-    composantes: [],
+    composantes: ["Compétences générales (Elec et Signal)"],
     headers: [
       {
         text: "Nom",
@@ -84,7 +75,7 @@ export default {
       },
       { text: "Actions", align: "right", value: "prenom", sortable: false }
     ],
-    groupes: []
+    familles: []
   }),
 
   created() {
@@ -93,20 +84,12 @@ export default {
 
   methods: {
     initialize() {
-      this.composantes=[{ name: "Compétences générales (Elec et Signal)" }, { name: "Electronique" }, { name: "Informatique" }],
-      this.equipe= "G1A",
-      this.groupes = [
+      this.familles = [
         {
-          name: "G1",
-          equipes: ["G1A", "G1B", "G1C"]
+          name: "Agir en bon communicant dans un environnement scientifique et technique"
         },
         {
-          name: "G2",
-          equipes: ["G2A"]
-        },
-        {
-          name: "G3",
-          equipes: ["G3A"]
+          name: "Etre en bon communicant"
         }
       ];
     }

@@ -138,13 +138,14 @@ export default {
         const baseURI =
           "http://bonapp.floriancomte.fr/templates/" +
           this.template._id +
-          "/semestres" +
+          "/semestres/" +
           this.editedItem._id;
         this.$http
           .patch(baseURI, {
             nom: this.editedItem.nom
           })
           .then(result => {
+            console.log(result)
             Object.assign(this.semestres[this.editedIndex], this.editedItem);
           })
           .catch(error => {
@@ -154,7 +155,7 @@ export default {
         const baseURI =
           "http://bonapp.floriancomte.fr/templates/" +
           this.template._id +
-          "/semestres";
+          "/semestres" ;
         this.$http
           .post(baseURI, {
             nom: this.editedItem.nom

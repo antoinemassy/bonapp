@@ -20,10 +20,10 @@
                 <v-container grid-list-md>
                   <v-layout wrap>
                     <v-flex xs12 sm6 md4>
-                      <v-text-field v-model="editedItem.name" label="Niveau"></v-text-field>
+                      <v-text-field v-model="editedItem.nom" label="Niveau"></v-text-field>
                     </v-flex>
                     <v-flex xs12 sm6 md4>
-                      <v-text-field v-model="editedItem.notes" label="Note"></v-text-field>
+                      <v-text-field v-model="editedItem.note" label="Note"></v-text-field>
                     </v-flex>
                   </v-layout>
                 </v-container>
@@ -40,8 +40,8 @@
 
         <v-data-table :headers="headers" :items="niveaux"   hide-actions  class="elevation-1">
           <template v-slot:items="props">
-            <td>{{ props.item.name }} </td>
-            <td class="text-xs-center"> {{ props.item.notes }}</td>
+            <td>{{ props.item.nom }} </td>
+            <td class="text-xs-center"> {{ props.item.note }}</td>
             <td class="text-xs-right">
               <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
               <v-icon small @click="deleteItem(props.item)">delete</v-icon>
@@ -60,26 +60,27 @@
 <script>
 export default {
   data: () => ({
+    template: { nom: "super template", _id: "" },
     dialog: false,
     headers: [
       {
         text: "Niveau",
         align: "left",
         sortable: false,
-        value: "name"
+        value: "nom"
       },
-      { text: "Note", align: "center",value: "notes" },
-      { text: "Actions", align: "right", value: "name", sortable: false }
+      { text: "Note", align: "center",value: "note" },
+      { text: "Actions", align: "right", value: "nom", sortable: false }
     ],
     niveaux: [],
     editedIndex: -1,
     editedItem: {
-      name: "",
-      notes: 0
+      nom: "",
+      note: 0
     },
     defaultItem: {
-      name: "",
-      notes: 0
+      nom: "",
+      note: 0
     }
   }),
 
@@ -96,25 +97,39 @@ export default {
   },
 
   created() {
+    this.template._id = this.$route.params._id;
     this.initialize();
   },
 
   methods: {
     initialize() {
+      const baseURI =
+        "http://bonapp.floriancomte.fr/templates/" +
+        this.template._id +
+        "/niveaux";
+      this.$http.get(baseURI).then(result => {
+        console.log(result.data);
+        this.niveaux = result.data;
+      })
+      .catch(error => {
+            console.log(this.template._id);
+          });
+      /*
       this.niveaux = [
         {
-          name: "Non acquis",
-          notes: 5
+          nom: "Non acquis",
+          note: 5
         },
         {
-          name: "Loin",
-          notes: 10
+          nom: "Loin",
+          note: 10
         },
         {
-          name: "Proche",
-          notes: 15
+          nom: "Proche",
+          note: 15
         }
       ];
+      */
     },
 
     editItem(item) {
@@ -125,8 +140,16 @@ export default {
 
     deleteItem(item) {
       const index = this.niveaux.indexOf(item);
+      const baseURI = "http://bonapp.floriancomte.fr/templates/" + this.template._id + "/niveaux/" + item._id;
       confirm("Are you sure you want to delete this item?") &&
-        this.niveaux.splice(index, 1);
+        this.$http
+          .delete(baseURI)
+          .then(result => {
+            this.niveaux.splice(index, 1);
+          })
+          .catch(error => {
+            console.log(error);
+          });
     },
 
     close() {
@@ -139,9 +162,40 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.niveaux[this.editedIndex], this.editedItem);
+        const baseURI =
+          "http://bonapp.floriancomte.fr/templates/" +
+          this.template._id +
+          "/niveaux/" +
+          this.editedItem._id;
+        this.$http
+          .patch(baseURI, {
+            nom: this.editedItem.nom,
+            note : this.editedItem.note
+          })
+          .then(result => {
+            console.log(result)
+            Object.assign(this.niveaux[this.editedIndex], this.editedItem);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+        
       } else {
-        this.niveaux.push(this.editedItem);
+        const baseURI =
+          "http://bonapp.floriancomte.fr/templates/" +
+          this.template._id +
+          "/niveaux" ;
+        this.$http
+          .post(baseURI, {
+            nom: this.editedItem.nom,
+            note: this.editedItem.note
+          })
+          .then(result => {
+            this.niveaux.push(this.editedItem);
+          })
+          .catch(error => {
+            console.log(error);
+          });
       }
       this.close();
     }

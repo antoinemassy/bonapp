@@ -20,16 +20,16 @@
               <v-container grid-list-md>
                 <v-layout wrap>
                   <v-flex xs12 sm6 md4>
-                    <v-text-field solo v-model="editedItem.name" label="Composante"></v-text-field>
+                    <v-text-field solo v-model="editedItem.nom" label="Composante"></v-text-field>
                   </v-flex>
                   <v-flex xs12 sm6 md4>
-                    <v-text-field solo v-model="editedItem.coefficients" label="Coefficient"></v-text-field>
+                    <v-text-field solo v-model="editedItem.coefficient" label="Coefficient"></v-text-field>
                   </v-flex>
                   <v-flex xs12 sm6 md4>
                     <v-select
-                      v-model="editedItem.semestres"
+                      v-model="editedItem.semestre"
                       :items="semestres"
-                      item-text="name"
+                      item-text="nom"
                       label="Semestre"
                       solo
                     ></v-select>
@@ -46,7 +46,11 @@
                       multiple
                     >
                       <template v-slot:selection="data">
-                        <v-chip :selected="data.selected" close @input="data.parent.selectItem(data.item)">
+                        <v-chip
+                          :selected="data.selected"
+                          close
+                          @input="data.parent.selectItem(data.item)"
+                        >
                           <strong>{{ data.item }}</strong>&nbsp;
                         </v-chip>
                       </template>
@@ -68,14 +72,14 @@
       <v-data-table
         :headers="headers"
         :items="composantes"
-        item-key="name"
+        item-key="nom"
         hide-actions
         class="elevation-1"
       >
         <template v-slot:items="props">
-            <td>{{ props.item.name }}</td>
-          <td>{{ props.item.coefficients }}</td>
-          <td>{{ props.item.semestres }}</td>
+          <td>{{ props.item.nom }}</td>
+          <td>{{ props.item.coefficient }}</td>
+          <td>{{ props.item.semestre.nom }}</td>
           <td class="text-xs-right">
             <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
             <v-icon small class="mr-2" @click="deleteItem(props.item)">delete</v-icon>
@@ -86,7 +90,6 @@
         <template v-slot:no-data>
           <v-btn color="primary" @click="initialize">Reset</v-btn>
         </template>
-
       </v-data-table>
     </div>
   </v-flex>
@@ -97,33 +100,34 @@
 <script>
 export default {
   data: () => ({
+    template: { nom: "super template", _id: "" },
     dialog: false,
     headers: [
       {
         text: "Composante",
         align: "left",
         sortable: false,
-        value: "name"
+        value: "nom"
       },
-      { text: "Coefficient", value: "coefficients", sortable: false },
-      { text: "Semestre", value: "semestres" },
-      { text: "Actions",align: "center", value: "name", sortable: false }
+      { text: "Coefficient", value: "coefficient", sortable: false },
+      { text: "Semestre", value: "semestre" },
+      { text: "Actions", align: "center", value: "nom", sortable: false }
     ],
     composantes: [],
-    familles:[],
-    semestres:[],
+    familles: [],
+    semestres: [],
     editedIndex: -1,
     editedItem: {
-      name: "",
-      coefficients: 0,
+      nom: "",
+      coefficient: 0,
       semestre: 0,
-      familles:""
+      familles: ""
     },
     defaultItem: {
-      name: "",
-      coefficients: 0,
+      nom: "",
+      coefficient: 0,
       semestre: 0,
-      familles:""
+      familles: ""
     }
   }),
 
@@ -142,11 +146,61 @@ export default {
   },
 
   created() {
+    this.template._id = this.$route.params._id;
     this.initialize();
   },
 
   methods: {
-     
+    initialize() {
+      const baseURI =
+        "http://bonapp.floriancomte.fr/templates/" +
+        this.template._id +
+        "/semestres";
+      this.$http.get(baseURI).then(result => {
+        
+        this.semestres = result.data;
+
+        for(var i=0, len=this.semestres.length; i<len; i++){
+          console.log(this.semestres[i]);
+          for(var j=0, len2=this.semestres[i]["composantes"].length; j<len2; j++){
+            let comp = this.semestres[i]["composantes"][j];
+            comp["semestre"]= this.semestres[i];
+            this.composantes.push(comp);
+            console.log(comp);
+          }
+        }
+        console.log(this.composantes);
+
+      });
+      
+    /*
+      (this.composantes = [
+        {
+          nom: "Compétences générales (Informatique et Télécom)",
+          coefficient: 1,
+          semestre: "Semestre 2",
+          familles: [
+            "Agir en bon communicant dans un environnement scientifique et technique",
+            "Agir en acteur efficace dans un groupe",
+            "Agir en professionel responsable"
+          ]
+        },
+        {
+          nom: "Informatique",
+          coefficient: 2,
+          semestre: "Semestre 1",
+          familles: [
+            "Agir en bon communicant dans un environnement scientifique et technique"
+          ]
+        },
+        {
+          nom: "Télécom",
+          coefficient: 1,
+          semestre: "Semestre 2"
+        }
+      ])
+      */
+    },
 
     editItem(item) {
       this.editedIndex = this.composantes.indexOf(item);
@@ -156,8 +210,20 @@ export default {
 
     deleteItem(item) {
       const index = this.composantes.indexOf(item);
+      const baseURI =
+        "http://bonapp.floriancomte.fr/templates/" +
+        this.template._id +
+        "/composantes/" +
+        item._id;
       confirm("Are you sure you want to delete this item?") &&
-        this.composantes.splice(index, 1);
+        this.$http
+          .delete(baseURI)
+          .then(result => {
+            this.composantes.splice(index, 1);
+          })
+          .catch(error => {
+            console.log(error);
+          });
     },
 
     open(item) {
@@ -173,15 +239,52 @@ export default {
       }, 300);
     },
     remove(item) {
-      this.editedItem.familles.splice(this.editedItem.familles.indexOf(item), 1);
+      this.editedItem.familles.splice(
+        this.editedItem.familles.indexOf(item),
+        1
+      );
       this.editedItem.familles = [...this.editedItem.familles];
     },
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.composantes[this.editedIndex], this.editedItem);
+        const baseURI =
+          "http://bonapp.floriancomte.fr/templates/" +
+          this.template._id +
+          "/composantes/" +
+          this.editedItem._id;
+        this.$http
+          .patch(baseURI, {
+            nom: this.editedItem.nom
+          })
+          .then(result => {
+            console.log(result);
+            Object.assign(this.composantes[this.editedIndex], this.editedItem);
+          })
+          .catch(error => {
+            console.log(error);
+          });
       } else {
-        this.composantes.push(this.editedItem);
+        console.log("coucu"+ this.editedItem.semestre);
+        const baseURI =
+          "http://bonapp.floriancomte.fr/templates/" +
+          this.template._id +
+          "/semestres/" +
+          this.editedItem.semestre._id +
+          "/composantes" ;
+        this.$http
+          .post(baseURI, {
+            nom: this.editedItem.nom,
+            coefficient: this.editedItem.coefficient,
+            semestre: this.editedItem.semestre,
+            familles: this.editedItem.familles
+          })
+          .then(result => {
+            this.composantes.push(this.editedItem);
+          })
+          .catch(error => {
+            console.log(error);
+          });
       }
       this.close();
     }

@@ -39,7 +39,7 @@ export default new VueRouter({
                 component: Template2,
             },
             {
-                path: '/admin/template/:idTemplate/famille/:idTemplate',
+                path: '/admin/template/:idTemplate/famille/:idFamille',
                 name: 'Template3',
                 component: Template3,
             },
