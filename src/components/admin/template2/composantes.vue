@@ -29,6 +29,7 @@
                     <v-select
                       v-model="editedItem.semestre"
                       :items="semestres"
+                      item-value="_id"
                       item-text="nom"
                       label="Semestre"
                       solo
@@ -83,7 +84,7 @@
           <td class="text-xs-right">
             <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
             <v-icon small class="mr-2" @click="deleteItem(props.item)">delete</v-icon>
-            <v-icon small class="mr-2" @click="open(props.item)">open_in_new</v-icon>
+            <router-link style="text-decoration:none" :to="{path: '/admin/template/'+ template._id + '/composante/' + props.item._id}"><v-icon small class="mr-2" @click="open(props.item)">open_in_new</v-icon></router-link>
           </td>
         </template>
 
@@ -211,10 +212,12 @@ export default {
     deleteItem(item) {
       const index = this.composantes.indexOf(item);
       const baseURI =
-        "http://bonapp.floriancomte.fr/templates/" +
-        this.template._id +
-        "/composantes/" +
-        item._id;
+          "http://bonapp.floriancomte.fr/templates/" +
+          this.template._id +
+          "/semestres/" +
+          this.editedItem.semestre +
+          "/composantes/" +
+          item._id ;
       confirm("Are you sure you want to delete this item?") &&
         this.$http
           .delete(baseURI)
@@ -251,11 +254,16 @@ export default {
         const baseURI =
           "http://bonapp.floriancomte.fr/templates/" +
           this.template._id +
+          "/semestres/" +
+          this.editedItem.semestre._id +
           "/composantes/" +
-          this.editedItem._id;
+          this.editedItem._id ;
         this.$http
           .patch(baseURI, {
-            nom: this.editedItem.nom
+            nom: this.editedItem.nom,
+            coefficient: this.editedItem.coefficient,
+            semestre: this.editItem.semestre,
+            familles: this.editedItem.familles
           })
           .then(result => {
             console.log(result);
@@ -270,7 +278,7 @@ export default {
           "http://bonapp.floriancomte.fr/templates/" +
           this.template._id +
           "/semestres/" +
-          this.editedItem.semestre._id +
+          this.editedItem.semestre +
           "/composantes" ;
         this.$http
           .post(baseURI, {
