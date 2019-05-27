@@ -15,6 +15,8 @@ import Etudiants from '../components/tuteur/etudiants.vue'
 import Groupes from '../components/tuteur/groupes.vue'
 import Groupes2 from '../components/tuteur/groupes2.vue'
 
+
+
 Vue.use(VueRouter)
 export default new VueRouter({
   routes: [
@@ -39,7 +41,7 @@ export default new VueRouter({
                 component: Template2,
             },
             {
-                path: '/admin/template/:idTemplate/composante/:idComposante',
+                path: '/admin/template/:idTemplate/semestre/:idSemestre/composante/:idComposante',
                 name: 'Template3',
                 component: Template3,
             },
@@ -62,8 +64,7 @@ export default new VueRouter({
                 path: '/admin/equipe',
                 name: 'Equipe',
                 component: Equipe,
-            }
-            ,
+            },
             {
                 path: '/admin/equipe2',
                 name: 'Equipe2',

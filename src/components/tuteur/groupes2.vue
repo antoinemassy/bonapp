@@ -16,45 +16,66 @@
       </v-flex>
     </v-layout>
 
-    <v-layout row justify-center>
-      <template>
-        <v-flex md4>
-          <div>
+    <v-layout row justify-space-around v-for="(item, index) in familles" :key="item.id">
+      <v-flex md11 xs12>
+        <template>
+          <div >
             <v-toolbar flat color="secondary">
-              <v-toolbar-title>Familles</v-toolbar-title>
+              <v-toolbar-title>{{familles[index].name}}</v-toolbar-title>
               <v-divider class="mx-2" inset vertical></v-divider>
               <v-spacer></v-spacer>
-            </v-toolbar>
+              <v-dialog v-model="dialog" max-width="1000px">
+                
+                <v-card>
+                  <v-card-title>
+                    <span class="headline">{{ formTitle }}</span>
+                  </v-card-title>
 
-            <v-data-table
-              :headers="headers"
-              :items="familles"
-              :expand="expand"
-              hide-actions
-              item-key="name"
-              class="elevation-1"
-            >
+                  <v-card-text>
+                    <v-container grid-list-md>
+                      <v-layout wrap>
+                        <v-flex xs12 sm6 md2>
+                          <v-text-field v-model="editedItem.name" label="Competence name"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-area v-model="editedItem.description" label="Description"></v-text-area>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-textarea v-model="editedItem.observationEquipe" label="Observation sur l'equipe"></v-textarea>
+                        </v-flex>
+                        <v-flex xs12 sm6 md2>
+                          <v-text-field v-model="editedItem.coefficient" label="Coefficient"></v-text-field>
+                        </v-flex>
+                      </v-layout>
+                    </v-container>
+                  </v-card-text>
+
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
+                    <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </v-toolbar>
+            <v-data-table :headers="headers" :items="competences" hide-actions class="elevation-1">
               <template v-slot:items="props">
-                <td
-                  class="text-xs-center"
-                  @click="props.expanded = !props.expanded"
-                >{{ props.item.name }}</td>
-                <td class="text-xs-right">
-                  <v-icon small class="mr-2" @click="test(props.item)">favorite</v-icon>
+                <td>{{ props.item.name }}</td>
+                <td>{{ props.item.description }}</td>
+                <td>{{ props.item.observationEquipe }}</td>
+                <td class="text-xs-center">{{ props.item.coefficient }}</td>
+                <td class="justify-end layout px-4">
+                  <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
+                  <v-icon small class="mr-2" @click="deleteItem(props.item)">delete</v-icon>
                 </td>
               </template>
               <template v-slot:no-data>
                 <v-btn color="primary" @click="initialize">Reset</v-btn>
               </template>
-              <template v-slot:expand="props">
-                <v-card v-for="item in props.item.equipes" :key="item" flat>
-                  <v-card-text @click="test()">{{ item }}</v-card-text>
-                </v-card>
-              </template>
             </v-data-table>
           </div>
-        </v-flex>
-      </template>
+        </template>
+      </v-flex>
     </v-layout>
   </v-container>
 </template>
@@ -64,19 +85,49 @@
 <script>
 export default {
   data: () => ({
-    equipe:"",
-    composantes: ["Compétences générales (Elec et Signal)"],
+    dialog: false,
+    template: { name: "Template 2020" },
+    composante: { name: "Compétences générales (Informatique et Télécom)" },
     headers: [
       {
-        text: "Nom",
-        align: "center",
+        text: "Compétence",
+        align: "left",
         sortable: false,
         value: "name"
       },
-      { text: "Actions", align: "right", value: "prenom", sortable: false }
+      { text: "Description", value: "description" },
+      { text: "Observation sur l'équipe", value: "observationEquipe" },
+      { text: "Coefficient", value: "coefficient" },
+      { text: "Actions", align: "right", value: "name", sortable: false }
     ],
-    familles: []
+    familles: [],
+    competences: [],
+    editedIndex: -1,
+    editedItem: {
+      name: "",
+      description: "",
+      observartionEquipe:"",
+      coefficient: 0
+    },
+    defaultItem: {
+      name: "",
+      description: "",
+      observartionEquipe:"",
+      coefficient: 0
+    }
   }),
+
+  computed: {
+    formTitle() {
+      return this.editedIndex === -1 ? "New Item" : "Edit Item";
+    }
+  },
+
+  watch: {
+    dialog(val) {
+      val || this.close();
+    }
+  },
 
   created() {
     this.initialize();
@@ -84,14 +135,52 @@ export default {
 
   methods: {
     initialize() {
-      this.familles = [
+      this.familles = [{ name: "Agir en communiquant " }, { name: "Vivre " }];
+      this.composantes = [{ name: "Compétences générales (Elec et Signal)" }];
+      this.equipe= "G1A";
+      this.competences = [
         {
-          name: "Agir en bon communicant dans un environnement scientifique et technique"
+          name: "Communiquer à l'oral",
+          description: "Il est tres important de bien savoir communiquer à l'oral pour se faire comprendre par son entrourage... ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+          observationEquipe:"Tres bonne equipe",
+          coefficient: 1
         },
         {
-          name: "Etre en bon communicant"
+          name: "Communiquer à l'écrit",
+          description: "- fournir le schéma fonctionnel d’un système d’analyse de signaux numériques  - Identifier les principales fonctions et fournir un schéma-bloc - Prendre en compte les contraintes d’implémentation - fournir le schéma fonctionnel d’un système d’analyse de signaux numériques",
+          observationEquipe:"Tres mauvaise equipe a l'ecrit qwertyuiopasdfghjklzxcvbnm",
+          coefficient: 2
         }
       ];
+    },
+
+    editItem(item) {
+      this.editedIndex = this.competences.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialog = true;
+    },
+
+    deleteItem(item) {
+      const index = this.competences.indexOf(item);
+      confirm("Are you sure you want to delete this item?") &&
+        this.competences.splice(index, 1);
+    },
+
+    close() {
+      this.dialog = false;
+      setTimeout(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      }, 300);
+    },
+
+    save() {
+      if (this.editedIndex > -1) {
+        Object.assign(this.competences[this.editedIndex], this.editedItem);
+      } else {
+        this.competences.push(this.editedItem);
+      }
+      this.close();
     }
   }
 };

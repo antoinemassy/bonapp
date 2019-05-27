@@ -24,7 +24,7 @@
       </v-list>
 
       <v-list dense>
-        <v-list-tile @click.stop="left = !left">
+        <v-list-tile @click.stop="left = !left" :to="{path: '/admin/groupe'}">
           <v-list-tile-action>
             <v-icon>groups</v-icon>
           </v-list-tile-action>
@@ -46,7 +46,7 @@
       </v-list>
 
       <v-list dense>
-        <v-list-tile @click.stop="left = !left">
+        <v-list-tile @click.stop="left = !left" :to="{path: '/admin/equipe'}">
           <v-list-tile-action>
             <v-icon>people_outline</v-icon>
           </v-list-tile-action>

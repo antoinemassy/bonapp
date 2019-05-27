@@ -7,7 +7,9 @@ import axios from 'axios'
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
-new Vue({
+var vm = new Vue({
   render: h => h(App),
   router
-}).$mount('#app')
+})
+vm.$mount('#app')
+global.vm = vm

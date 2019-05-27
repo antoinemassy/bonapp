@@ -6,6 +6,7 @@
         true-value="Synthèse"
         false-value="Ensemble"
         :label="`Vue: ${switch1.toString()}`"
+        @change="test()"
       ></v-switch>
 
       <v-layout row justify-space-around mb-4 pt-0 mt-0>
@@ -214,6 +215,7 @@ export default {
     ]
   }),
   methods: {
+    
     moyenneS1: function(n) {
       return (n.GESGrade + n.electroniqueGrade + n.signalGrade) / 3;
     },

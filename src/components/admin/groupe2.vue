@@ -43,6 +43,24 @@
                           <v-text-field v-model="editedItem.name" label="Nom"></v-text-field>
                         </v-flex>
                       </v-layout>
+
+
+                      <v-flex xs12 sm12 md12>
+                  <v-list>
+                    <v-list-tile v-for="item in editedItem.equipes" :key="item.equipes">
+                      <v-list-tile-content>
+                          <v-list-tile-title v-text="item.name"></v-list-tile-title>
+                      </v-list-tile-content>
+                      <v-list-tile-action>
+                        <v-btn icon ripple @click="deleteEquipe(item)">
+                          <v-icon color="grey lighten-1">delete</v-icon>
+                        </v-btn>
+                      </v-list-tile-action>
+
+                    </v-list-tile>
+                  </v-list>
+                  </v-flex>
+
                       <template>
                         <v-combobox
                           v-model="editedItem.equipes"
@@ -96,7 +114,7 @@
               </template>
               <template v-slot:expand="props">
                 <v-card v-for="item in props.item.equipes" :key="item" flat>
-                  <v-card-text @click="test()">{{ item }}</v-card-text>
+                  <v-card-text @click="test()">{{ item.name }}</v-card-text>
                 </v-card>
               </template>
             </v-data-table>
@@ -157,15 +175,15 @@ export default {
       this.groupes = [
         {
           name: "G1",
-          equipes: ["G1A", "G1B", "G1C"]
+          equipes: [{name:"G1A"}, {name:"G1B"}, {name:"G1C"}]
         },
         {
           name: "G2",
-          equipes: ["G2A"]
+          equipes: [{name:"G2A"}]
         },
         {
           name: "G3",
-          equipes: ["G3A"]
+          equipes: [{name:"G3A"}]
         }
       ];
     },
