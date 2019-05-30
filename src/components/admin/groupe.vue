@@ -3,17 +3,22 @@
     <v-layout row justify-center align-start mt-3>
       <v-flex xs12 sm5 md7>
         <v-card>
-          <v-subheader>Sélectionner un promotion</v-subheader>
+          <v-subheader>Sélectionner une promotion</v-subheader>
         </v-card>
         <v-card>
           <v-list>
-            <v-list-tile v-for="item in promotions" :key="item.title">
+            <v-list-tile v-for="item in promotions" :key="item.nom">
               <v-list-tile-content>
-                <router-link style="text-decoration:none" :to="{path: '/admin/promotion/'+ item._id}"><v-list-tile-title v-text="item.title" ></v-list-tile-title></router-link>
+                <router-link
+                  style="text-decoration:none"
+                  :to="{path: '/admin/promotion/'+ item._id}"
+                >
+                  <v-list-tile-title v-text="item.nom"></v-list-tile-title>
+                </router-link>
               </v-list-tile-content>
               <v-spacer></v-spacer>
               <v-list-tile-content>
-                <v-list-tile-title v-text="item.template"></v-list-tile-title>
+                <v-list-tile-title v-text="item.template != undefined ? item.template.nom : ''"></v-list-tile-title>
               </v-list-tile-content>
 
               <v-list-tile-action>
@@ -25,16 +30,17 @@
           </v-list>
         </v-card>
         <v-card>
-          <v-subheader>Créer un promotion</v-subheader>
+          <v-subheader>Créer une promotion</v-subheader>
           <v-layout row wrap>
             <v-flex xs12 sm5 md4 ml-2>
-              <v-text-field v-model="newitem.title" label="Nom" single-line solo></v-text-field>
+              <v-text-field v-model="newitem.nom" label="Nom" single-line solo></v-text-field>
             </v-flex>
             <v-spacer></v-spacer>
             <v-flex xs12 sm5 md3>
               <v-select
                 :items="templates"
                 item-text="nom"
+                item-value="_id"
                 v-model="newitem.template"
                 label="Template"
                 solo
@@ -55,7 +61,7 @@
 export default {
   data() {
     return {
-      newitem: { title: "", template: "" },
+      newitem: { nom: "", template: "" },
       existingitem: { title: "", template: "" },
       defaultitem: { title: "", template: "" },
       promotions: [{ title: "promotest", template: "2020" }],
@@ -72,18 +78,39 @@ export default {
         this.promotions.splice(index, 1);
     },
     addItem(item) {
-      this.promotions.push(item);
-      this.newitem = Object.assign({}, this.defaultitem);
-      this.existingitem = Object.assign({}, this.defaultitem);
+      console.log(item)
+      const baseURI = "http://bonapp.floriancomte.fr/promotions";
+      this.$http
+        .post(baseURI, {
+          
+          nom: item.nom,
+          template: item.template
+        })
+        .then(result => {
+          this.promotions.push(item);
+          this.newitem = Object.assign({}, this.defaultitem);
+          this.existingitem = Object.assign({}, this.defaultitem);
+        })
+        .catch(error =>{
+          console.log(error);
+        });
+
+
+
+      // this.promotions.push(item);
+      // this.newitem = Object.assign({}, this.defaultitem);
+      // this.existingitem = Object.assign({}, this.defaultitem);
     },
     initialize: function() {
-      // const baseURI = "http://bonapp.floriancomte.fr/promotions";
-      // this.$http.get(baseURI).then(result => {
-      //   this.promotions = result.data;
-      // });
-
-      const baseURI = "http://bonapp.floriancomte.fr/templates";
+      const baseURI = "http://bonapp.floriancomte.fr/promotions";
       this.$http.get(baseURI).then(result => {
+        this.promotions = result.data;
+        console.log(this.promotions)
+      });
+      
+
+      const baseURI2 = "http://bonapp.floriancomte.fr/templates";
+      this.$http.get(baseURI2).then(result => {
         this.templates = result.data;
       });
     }

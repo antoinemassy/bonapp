@@ -219,7 +219,6 @@ export default {
   watch: {
       switch1(newValue){
         //called whenever switch1 changes
-        
         if(newValue==="Ensemble"){
           this.$router.push('/admin/equipe2');
         }

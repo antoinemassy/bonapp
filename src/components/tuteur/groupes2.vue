@@ -35,16 +35,16 @@
                     <v-container grid-list-md>
                       <v-layout wrap>
                         <v-flex xs12 sm6 md2>
-                          <v-text-field v-model="editedItem.name" label="Competence name"></v-text-field>
+                          <v-text-field v-model="editedItem.name"  readonly label="Competence name"></v-text-field>
                         </v-flex>
                         <v-flex xs12 sm6 md4>
-                          <v-text-area v-model="editedItem.description" label="Description"></v-text-area>
+                          <v-textarea v-model="editedItem.description" readonly label="Description"></v-textarea>
                         </v-flex>
                         <v-flex xs12 sm6 md4>
                           <v-textarea v-model="editedItem.observationEquipe" label="Observation sur l'equipe"></v-textarea>
                         </v-flex>
                         <v-flex xs12 sm6 md2>
-                          <v-text-field v-model="editedItem.coefficient" label="Coefficient"></v-text-field>
+                          <v-text-field v-model="editedItem.coefficient" readonly label="Coefficient"></v-text-field>
                         </v-flex>
                       </v-layout>
                     </v-container>
@@ -64,9 +64,8 @@
                 <td>{{ props.item.description }}</td>
                 <td>{{ props.item.observationEquipe }}</td>
                 <td class="text-xs-center">{{ props.item.coefficient }}</td>
-                <td class="justify-end layout px-4">
+                <td class="justify-center layout px-4">
                   <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
-                  <v-icon small class="mr-2" @click="deleteItem(props.item)">delete</v-icon>
                 </td>
               </template>
               <template v-slot:no-data>
@@ -160,12 +159,7 @@ export default {
       this.dialog = true;
     },
 
-    deleteItem(item) {
-      const index = this.competences.indexOf(item);
-      confirm("Are you sure you want to delete this item?") &&
-        this.competences.splice(index, 1);
-    },
-
+   
     close() {
       this.dialog = false;
       setTimeout(() => {

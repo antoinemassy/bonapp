@@ -55,9 +55,11 @@
                 <v-btn color="primary" @click="initialize">Reset</v-btn>
               </template>
               <template v-slot:expand="props">
-                <v-card v-for="item in props.item.equipes" :key="item" flat>
-                  <v-card-text @click="test()">{{ item }}</v-card-text>
-                </v-card>
+                <router-link style="text-decoration:none" :to="{path: '/tuteur/groupes2'}">
+                  <v-card v-for="item in props.item.equipes" :key="item" flat>
+                    <v-card-text>{{ item }}</v-card-text>
+                  </v-card>
+                </router-link>
               </template>
             </v-data-table>
           </div>
