@@ -64,13 +64,13 @@
                         <v-layout row wrap>
                           <v-flex xs12 sm5 md10>
                             <v-text-field
-                              v-model="newEquipe.nom"
+                              v-model="newEquipe.name"
                               label="Entrer le nom d’une nouvelle famille"
                               single-line
                               solo
                             ></v-text-field>
                           </v-flex>
-                          <v-btn icon ripple @click="addEquipe(newEquipe )">
+                          <v-btn icon ripple @click="addEquipe(newEquipe)">
                             <v-icon color="grey lighten-1">add_circle</v-icon>
                           </v-btn>
                         </v-layout>
@@ -109,9 +109,14 @@
                 <v-btn color="primary" @click="initialize">Reset</v-btn>
               </template>
               <template v-slot:expand="props">
-                <v-card v-for="item in props.item.equipes" :key="item" flat>
-                  <v-card-text @click="test()">{{ item.name }}</v-card-text>
+                <router-link
+                  style="text-decoration:none"
+                  :to="{path: '/admin/groupe3'}"
+                >
+                  <v-card v-for="item in props.item.equipes" :key="item" flat>
+                  <v-card-text>{{ item.name }}</v-card-text>
                 </v-card>
+                </router-link>
               </template>
             </v-data-table>
           </div>
@@ -127,7 +132,7 @@
 export default {
   data: () => ({
     template: { name: "Promotion 2020" },
-    newEquipe: "",
+    newEquipe: {},
     dialog: false,
     headers: [
       {
@@ -139,7 +144,7 @@ export default {
       { text: "Actions", align: "right", value: "name", sortable: false }
     ],
     groupes: [],
-    equipes: ["test"],
+    equipes: [],
     editedIndex: -1,
     editedItem: {
       name: "",
@@ -186,17 +191,20 @@ export default {
     },
 
     addEquipe(newEquipe) {
+      console.log(this.editedItem.equipes);
+      name = newEquipe.name;
       this.editedItem.equipes.push({
-        newEquipe
+        name
         //nom: result.data.nom,
         //_id: result.data._id
       });
-      this.newEquipe = Object.assign({}, "");
+      this.newEquipe = Object.assign({}, {});
     },
 
-    remove(item) {
-      this.editedItem.equipes.splice(this.editedItem.equipes.indexOf(item), 1);
-      this.editedItem.equipes = [...this.editedItem.equipes];
+    deleteEquipe(item) {
+      const index = this.editedItem.equipes.indexOf(item);
+      confirm("Are you sure you want to delete this item?") &&
+        this.editedItem.equipes.splice(index, 1);
     },
 
     editItem(item) {

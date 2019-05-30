@@ -1,17 +1,16 @@
 <template>
   <v-container fluid grid-list-xl pt-0 pb-5>
-    <v-layout row justify-space-around mb-1 pt-0 mt-0>
-      <v-flex md3 xs4>
-        <v-card color="accent" class="white--text">
+     <v-layout row justify-center mb-3 pt-0 mt-4>
+      <v-flex md3>
+        <router-link style="text-decoration:none" :to="{path: '/admin/promotion/test'}">
+          <v-card color="accent" class="white--text">
           <v-card-title class="justify-center" primary-title>
             <div class="headline">{{template.name}}</div>
           </v-card-title>
         </v-card>
+        </router-link>
       </v-flex>
-    </v-layout>
-
-    <v-layout row justify-space-around mb-1 pt-0 mt-0>
-      <v-flex md3 xs4>
+      <v-flex md3>
         <v-card color="accent" class="white--text">
           <v-card-title class="justify-center" primary-title>
             <div class="headline">Équipe {{equipe.name}}</div>
@@ -19,7 +18,7 @@
         </v-card>
       </v-flex>
     </v-layout>
-
+    
     <v-layout row justify-space-around>
       <template>
         <v-flex md7>

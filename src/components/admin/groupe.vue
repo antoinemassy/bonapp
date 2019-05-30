@@ -27,7 +27,7 @@
         <v-card>
           <v-subheader>Créer un promotion</v-subheader>
           <v-layout row wrap>
-            <v-flex xs12 sm5 md5>
+            <v-flex xs12 sm5 md4 ml-2>
               <v-text-field v-model="newitem.title" label="Nom" single-line solo></v-text-field>
             </v-flex>
             <v-spacer></v-spacer>
