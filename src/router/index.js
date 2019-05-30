@@ -61,7 +61,7 @@ export default new VueRouter({
                     component: Groupe2,
                 },
                 {
-                    path: '/admin/groupe3',
+                    path: '/admin/promotion/:idPromotion/groupe/:idGroupe/equipe/:idEquipe',
                     name: 'Groupe3',
                     component: Groupe3,
                 },

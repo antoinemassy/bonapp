@@ -1,13 +1,13 @@
 <template>
   <v-container fluid grid-list-xl pt-0 pb-5>
-     <v-layout row justify-center mb-3 pt-0 mt-4>
+    <v-layout row justify-center mb-3 pt-0 mt-4>
       <v-flex md3>
-        <router-link style="text-decoration:none" :to="{path: '/admin/promotion/test'}">
+        <router-link style="text-decoration:none" :to="{path: '/admin/promotion/' +promotion._id}">
           <v-card color="accent" class="white--text">
-          <v-card-title class="justify-center" primary-title>
-            <div class="headline">{{template.name}}</div>
-          </v-card-title>
-        </v-card>
+            <v-card-title class="justify-center" primary-title>
+              <div class="headline">{{promotion.nom}}</div>
+            </v-card-title>
+          </v-card>
         </router-link>
       </v-flex>
       <v-flex md3>
@@ -18,7 +18,7 @@
         </v-card>
       </v-flex>
     </v-layout>
-    
+
     <v-layout row justify-space-around>
       <template>
         <v-flex md7>
@@ -48,7 +48,7 @@
                           <v-text-field v-model="editedItem.nom" label="Nom"></v-text-field>
                         </v-flex>
                         <v-flex xs12 sm6 md2>
-                          <v-text-field v-model="editedItem.id" label="Id"></v-text-field>
+                          <v-text-field v-model="editedItem.code" label="Id"></v-text-field>
                         </v-flex>
                         <v-flex xs12 sm6 md2>
                           <v-select
@@ -74,7 +74,7 @@
 
             <v-data-table
               :headers="headers"
-              :items="etudiants"
+              :items="eleves"
               hide-actions
               item-key="prenom"
               class="elevation-1"
@@ -82,7 +82,7 @@
               <template v-slot:items="props">
                 <td class="text-xs-center">{{ props.item.prenom }}</td>
                 <td class="text-xs-center">{{ props.item.nom }}</td>
-                <td class="text-xs-center">{{ props.item.id }}</td>
+                <td class="text-xs-center">{{ props.item.code }}</td>
                 <td class="text-xs-center">{{ props.item.genre }}</td>
                 <td class="text-xs-right">
                   <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
@@ -105,6 +105,8 @@
 <script>
 export default {
   data: () => ({
+    promotion: {},
+    groupe: {},
     template: { name: "Promotion 2020" },
     equipe: { name: "G1A" },
     genres: [{ name: "M" }, { name: "F" }],
@@ -112,22 +114,22 @@ export default {
     headers: [
       { text: "Prenom", align: "center", value: "prenom", sortable: false },
       { text: "Nom", align: "center", value: "nom", sortable: false },
-      { text: "Id", align: "center", value: "id", sortable: false },
+      { text: "Id", align: "center", value: "code", sortable: false },
       { text: "Genre", align: "center", value: "genre", sortable: false },
       { text: "Actions", align: "right", value: "name", sortable: false }
     ],
-    etudiants: [],
+    eleves: [],
     editedIndex: -1,
     editedItem: {
       prenom: "",
       nom: "",
-      id: "",
+      code: "",
       genre: ""
     },
     defaultItem: {
       prenom: "",
       nom: "",
-      id: "",
+      code: "",
       genre: ""
     }
   }),
@@ -145,43 +147,69 @@ export default {
   },
 
   created() {
+    this.promotion._id = this.$route.params.idPromotion;
+    this.groupe._id = this.$route.params.idGroupe;
+    this.equipe._id = this.$route.params.idEquipe;
     this.initialize();
   },
 
   methods: {
     initialize() {
-      this.etudiants = [
-        {
-          prenom: "Antoine",
-          nom: "Massy",
-          id: "9414",
-          genre: "M"
-        },
-        {
-          prenom: "Jean Michel",
-          nom: "Dupont",
-          id: "3310",
-          genre: "M"
-        },
-        {
-          prenom: "Jean Thierry",
-          nom: "De le puenta",
-          id: "118218",
-          genre: "M"
-        }
-      ];
+      const baseURI =
+        "http://bonapp.floriancomte.fr/promotions/" +
+        this.promotion._id;
+        this.$http.get(baseURI).then(result => {
+        
+        this.promotion = {_id:this.promotion._id, nom: result.data.nom};
+        console.log(result.data);
+      });
+
+
+
+      const baseURI2 =
+        "http://bonapp.floriancomte.fr/promotions/" +
+        this.promotion._id +
+        "/groupes/" +
+        this.groupe._id +
+        "/equipes/" +
+        this.equipe._id+
+        "/eleves";
+      this.$http.get(baseURI2).then(result => {
+        console.log(result.data);
+        this.eleves = result.data;
+      });
+      // this.eleves = [
+      //   {
+      //     prenom: "Antoine",
+      //     nom: "Massy",
+      //     code: "9414",
+      //     genre: "M"
+      //   },
+      //   {
+      //     prenom: "Jean Michel",
+      //     nom: "Dupont",
+      //     code: "3310",
+      //     genre: "M"
+      //   },
+      //   {
+      //     prenom: "Jean Thierry",
+      //     nom: "De le puenta",
+      //     code: "118218",
+      //     genre: "M"
+      //   }
+      // ];
     },
 
     editItem(item) {
-      this.editedIndex = this.etudiants.indexOf(item);
+      this.editedIndex = this.eleves.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
 
     deleteItem(item) {
-      const index = this.etudiants.indexOf(item);
+      const index = this.eleves.indexOf(item);
       confirm("Are you sure you want to delete this item?") &&
-        this.etudiants.splice(index, 1);
+        this.eleves.splice(index, 1);
     },
 
     close() {
@@ -194,9 +222,31 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.etudiants[this.editedIndex], this.editedItem);
+        Object.assign(this.eleves[this.editedIndex], this.editedItem);
       } else {
-        this.etudiants.push(this.editedItem);
+        
+        const baseURI =
+        "http://bonapp.floriancomte.fr/promotions/" +
+        this.promotion._id +
+        "/groupes/" +
+        this.groupe._id +
+        "/equipes/" +
+        this.equipe._id+
+        "/eleves";
+        this.$http
+          .post(baseURI, {
+            prenom: this.editedItem.prenom,
+            nom: this.editedItem.nom,
+            code: this.editedItem.code,
+            genre: this.editedItem.genre
+          })
+          .then(result => {
+            this.eleves.push(this.editedItem);
+            this.initialize();
+          })
+          .catch(error => {
+            console.log(error);
+          });
       }
       this.close();
     }

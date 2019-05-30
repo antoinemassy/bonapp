@@ -4,7 +4,7 @@
       <v-flex md3 xs4>
         <v-card color="accent" class="white--text">
           <v-card-title class="justify-center" primary-title>
-            <div class="headline">{{template.name}}</div>
+            <div class="headline">{{promotion.nom}}</div>
           </v-card-title>
         </v-card>
       </v-flex>
@@ -40,7 +40,7 @@
                     <v-container grid-list-md>
                       <v-layout wrap column>
                         <v-flex xs12 sm6 md4>
-                          <v-text-field v-model="editedItem.name" label="Nom"></v-text-field>
+                          <v-text-field v-model="editedItem.nom" label="Nom"></v-text-field>
                         </v-flex>
                       </v-layout>
 
@@ -48,7 +48,7 @@
                         <v-list>
                           <v-list-tile v-for="item in editedItem.equipes" :key="item.equipes">
                             <v-list-tile-content>
-                              <v-list-tile-title v-text="item.name"></v-list-tile-title>
+                              <v-list-tile-title v-text="item.nom"></v-list-tile-title>
                             </v-list-tile-content>
                             <v-list-tile-action>
                               <v-btn icon ripple @click="deleteEquipe(item)">
@@ -60,12 +60,12 @@
                       </v-flex>
 
                       <v-flex xs12 sm12 md12>
-                        <v-subheader>Créer une famille</v-subheader>
+                        <v-subheader>Créer une équipe</v-subheader>
                         <v-layout row wrap>
                           <v-flex xs12 sm5 md10>
                             <v-text-field
-                              v-model="newEquipe.name"
-                              label="Entrer le nom d’une nouvelle famille"
+                              v-model="newEquipe.nom"
+                              label="Entrer le nom d’une nouvelle équipe"
                               single-line
                               solo
                             ></v-text-field>
@@ -92,14 +92,14 @@
               :items="groupes"
               :expand="expand"
               hide-actions
-              item-key="name"
+              item-key="nom"
               class="elevation-1"
             >
               <template v-slot:items="props">
                 <td
                   class="text-xs-center"
                   @click="props.expanded = !props.expanded"
-                >{{ props.item.name }}</td>
+                >{{ props.item.nom }} </td>
                 <td class="text-xs-right">
                   <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
                   <v-icon small @click="deleteItem(props.item)">delete</v-icon>
@@ -109,14 +109,12 @@
                 <v-btn color="primary" @click="initialize">Reset</v-btn>
               </template>
               <template v-slot:expand="props">
-                <router-link
-                  style="text-decoration:none"
-                  :to="{path: '/admin/groupe3'}"
-                >
+                
                   <v-card v-for="item in props.item.equipes" :key="item" flat>
-                  <v-card-text>{{ item.name }}</v-card-text>
-                </v-card>
-                </router-link>
+                    <router-link style="text-decoration:none" :to="{path: '/admin/promotion/'+ promotion._id+ '/groupe/' + props.item._id + '/equipe/' + item._id}">
+                    <v-card-text>{{ item.nom }}</v-card-text>
+                    </router-link>
+                  </v-card>
               </template>
             </v-data-table>
           </div>
@@ -131,7 +129,7 @@
 <script>
 export default {
   data: () => ({
-    template: { name: "Promotion 2020" },
+    promotion: {},
     newEquipe: {},
     dialog: false,
     headers: [
@@ -139,19 +137,19 @@ export default {
         text: "Nom",
         align: "center",
         sortable: false,
-        value: "name"
+        value: "nom"
       },
-      { text: "Actions", align: "right", value: "name", sortable: false }
+      { text: "Actions", align: "right", value: "nom", sortable: false }
     ],
     groupes: [],
     equipes: [],
     editedIndex: -1,
     editedItem: {
-      name: "",
+      nom: "",
       equipes: []
     },
     defaultItem: {
-      name: "",
+      nom: "",
       equipes: []
     }
   }),
@@ -169,36 +167,78 @@ export default {
   },
 
   created() {
+    this.promotion._id = this.$route.params.idPromotion;
     this.initialize();
   },
 
   methods: {
     initialize() {
-      this.groupes = [
-        {
-          name: "G1",
-          equipes: [{ name: "G1A" }, { name: "G1B" }, { name: "G1C" }]
-        },
-        {
-          name: "G2",
-          equipes: [{ name: "G2A" }]
-        },
-        {
-          name: "G3",
-          equipes: [{ name: "G3A" }]
-        }
-      ];
+      const baseURI =
+        "http://bonapp.floriancomte.fr/promotions/" +
+        this.promotion._id;
+        this.$http.get(baseURI).then(result => {
+        
+        this.promotion = {_id:this.promotion._id, nom: result.data.nom};
+        console.log(result.data);
+      });
+      const baseURI2 =
+        "http://bonapp.floriancomte.fr/promotions/" +
+        this.promotion._id +
+        "/groupes";
+      this.$http
+        .get(baseURI2)
+        .then(result => {
+          console.log(result.data);
+          this.groupes = result.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+
+      // this.groupes = [
+      //   {
+      //     nom: "G1",
+      //     equipes: [{ nom: "G1A" }, { nom: "G1B" }, { nom: "G1C" }]
+      //   },
+      //   {
+      //     nom: "G2",
+      //     equipes: [{ nom: "G2A" }]
+      //   },
+      //   {
+      //     nom: "G3",
+      //     equipes: [{ nom: "G3A" }]
+      //   }
+      // ];
     },
 
     addEquipe(newEquipe) {
-      console.log(this.editedItem.equipes);
-      name = newEquipe.name;
-      this.editedItem.equipes.push({
-        name
-        //nom: result.data.nom,
-        //_id: result.data._id
-      });
-      this.newEquipe = Object.assign({}, {});
+      const baseURI =
+        "http://bonapp.floriancomte.fr/promotions/" +
+        this.promotion._id +
+        "/groupes/" +
+        this.editedItem._id+
+        "/equipes";
+      this.$http
+        .post(baseURI, { nom: newEquipe.nom })
+        .then(result => {
+          console.log(result);
+          this.editedItem.equipes.push({
+            nom: result.data.nom,
+            _id: result.data._id
+          });
+          this.newEquipe = Object.assign({}, { nom: "" });
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      // console.log(this.editedItem.equipes);
+      // nom = newEquipe.nom;
+      // this.editedItem.equipes.push({
+      //   nom
+      //   //nom: result.data.nom,
+      //   //_id: result.data._id
+      // });
+      // this.newEquipe = Object.assign({}, {});
     },
 
     deleteEquipe(item) {
@@ -229,9 +269,36 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.groupes[this.editedIndex], this.editedItem);
+        const baseURI =
+          "http://bonapp.floriancomte.fr/promotions/" +
+          this.promotion._id +
+          "/groupes/" +
+          this.editedItem._id;
+        this.$http
+          .patch(baseURI, {
+            nom: this.editedItem.nom
+          })
+          .then(result => {
+            Object.assign(this.groupes[this.editedIndex], this.editedItem);
+          })
+          .catch(error => {
+            console.log(error);
+          });
       } else {
-        this.groupes.push(this.editedItem);
+        const baseURI =
+          "http://bonapp.floriancomte.fr/promotions/" +
+          this.promotion._id +
+          "/groupes";
+        this.$http
+          .post(baseURI, {
+            nom: this.editedItem.nom
+          })
+          .then(result => {
+            this.groupes.push(this.editedItem);
+          })
+          .catch(error => {
+            console.log(error);
+          });
       }
       this.close();
     }

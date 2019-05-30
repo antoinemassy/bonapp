@@ -13,7 +13,7 @@
       <v-flex md6>
         <v-card color="accent" class="white--text">
           <v-card-title class="justify-center" primary-title>
-            <div class="headline">{{composante.name}}</div>
+            <div class="headline">{{composante.nom}}</div>
           </v-card-title>
         </v-card>
       </v-flex>
@@ -99,7 +99,7 @@ export default {
     dialog: false,
     template: {},
     semestre: {},
-    composante: { name: "Compétences fAKEEEEE" },
+    composante: {},
     headers: [
       {
         text: "Famille",
@@ -193,10 +193,18 @@ export default {
           this.template = result.data;
         });
 
+        const baseURI2 =
+          "http://bonapp.floriancomte.fr/templates/" +
+          this.template._id +
+          "/semestres/" +
+          this.semestre._id +
+          "/composantes/" +
+          this.composante._id ;
+        this.$http.get(baseURI2).then(result => {
+          console.log(result.data);
+          this.composante = result.data;
+        });
 
-        
-
-        
         console.log(this.composante);
         console.log(this.familles);
       });

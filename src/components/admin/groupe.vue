@@ -87,7 +87,7 @@ export default {
           template: item.template
         })
         .then(result => {
-          this.promotions.push(item);
+          this.promotions.push({nom: result.data.nom, _id: result.data._id, template: result.data.template});
           this.newitem = Object.assign({}, this.defaultitem);
           this.existingitem = Object.assign({}, this.defaultitem);
         })
