@@ -74,7 +74,7 @@
 <script>
 export default {
   data: () => ({
-    switch1: "Synthèse",
+    switch1: "Ensemble",
     test: {
       name: "GESGrade"
     },
@@ -159,6 +159,16 @@ export default {
       }
     ]
   }),
+
+    watch: {
+      switch1(newValue){
+        //called whenever switch1 changes
+        
+        if(newValue==="Synthèse"){
+          this.$router.push('/admin/equipe');
+        }
+      }
+    },
   methods: {
     moyenneS1: function(n) {
       return (n.GESGrade + n.electroniqueGrade + n.signalGrade) / 3;

@@ -1,19 +1,13 @@
 <template>
-
-<v-app>
-   <v-toolbar color="primary" dark fixed app clipped-right>
+  <v-app>
+    <v-toolbar color="primary" dark fixed app clipped-right>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-toolbar-title>Bon APP</v-toolbar-title>
     </v-toolbar>
-    
-    <v-navigation-drawer
-      v-model="drawer"
-      fixed
-      app
-      close
-    >
+
+    <v-navigation-drawer v-model="drawer" fixed app close>
       <v-list dense>
-        <v-list-tile @click.stop="left = !left">
+        <v-list-tile @click.stop="left = !left" :to="{path: '/admin/profil'}">
           <v-list-tile-action>
             <v-icon>person</v-icon>
           </v-list-tile-action>
@@ -24,7 +18,7 @@
       </v-list>
 
       <v-list dense>
-        <v-list-tile @click.stop="left = !left" :to="{path: '/admin/groupe'}">
+        <v-list-tile @click.stop="left = !left" :to="{path: '/admin/promotion'}">
           <v-list-tile-action>
             <v-icon>groups</v-icon>
           </v-list-tile-action>
@@ -40,7 +34,7 @@
             <v-icon>description</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title >Templates</v-list-tile-title>
+            <v-list-tile-title>Templates</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -67,10 +61,10 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
- <v-content>
-<router-view></router-view>
- </v-content>
-</v-app>
+    <v-content>
+      <router-view></router-view>
+    </v-content>
+  </v-app>
 </template>
 
 

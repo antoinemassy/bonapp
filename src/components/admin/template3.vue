@@ -2,11 +2,13 @@
   <v-container fluid grid-list-xl pt-0 pb-5>
     <v-layout row justify-space-around mb-3 pt-0 mt-4>
       <v-flex md3>
-        <v-card color="accent" class="white--text">
-          <v-card-title class="justify-center" primary-title>
-            <div class="headline">{{template.name}}</div>
-          </v-card-title>
-        </v-card>
+        <router-link style="text-decoration:none" :to="{path: '/admin/template/'+ template._id }">
+          <v-card color="accent" class="white--text">
+            <v-card-title class="justify-center" primary-title>
+              <div class="headline">{{template.nom}}</div>
+            </v-card-title>
+          </v-card>
+        </router-link>
       </v-flex>
       <v-flex md6>
         <v-card color="accent" class="white--text">
@@ -24,7 +26,7 @@
               <v-toolbar-title>Compétences</v-toolbar-title>
               <v-divider class="mx-2" inset vertical></v-divider>
               <v-spacer></v-spacer>
-              <v-dialog v-model="dialog" max-width="1000px">
+              <v-dialog v-model="dialog" max-width="600px">
                 <template v-slot:activator="{ on }">
                   <v-btn v-on="on">
                     <v-icon color="grey lighten">add_circle</v-icon>
@@ -37,7 +39,7 @@
 
                   <v-card-text>
                     <v-container grid-list-md>
-                      <v-layout wrap>
+                      <v-layout wrap column>
                         <v-flex xs12 sm6 md2>
                           <v-select
                             v-model="editedItem.famille"
@@ -95,9 +97,9 @@
 export default {
   data: () => ({
     dialog: false,
-    template: { name: "Template 2020" },
+    template: {},
     semestre: {},
-    composante: { name: "Compétences générales (Informatique et Télécom)" },
+    composante: { name: "Compétences fAKEEEEE" },
     headers: [
       {
         text: "Famille",
@@ -118,7 +120,7 @@ export default {
     competences: [],
     editedIndex: -1,
     editedItem: {
-      famille:"",
+      famille: "",
       nom: "",
       description: "",
       coefficient: 0
@@ -132,7 +134,9 @@ export default {
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "Nouvelle competence" : "Editer la competence";
+      return this.editedIndex === -1
+        ? "Nouvelle competence"
+        : "Editer la competence";
     }
   },
 
@@ -152,7 +156,7 @@ export default {
   methods: {
     initialize() {
       this.composantes = [];
-      this.familles =[];
+      this.familles = [];
       const baseURI =
         "http://bonapp.floriancomte.fr/templates/" +
         this.template._id +
@@ -163,7 +167,7 @@ export default {
         "/familles/";
       this.$http.get(baseURI).then(result => {
         console.log(result.data);
-        this.familles= result.data;
+        this.familles = result.data;
         this.competences = [];
         for (var i = 0; i < result.data.length; i++) {
           for (var j = 0; j < result.data[i].competences.length; j++) {
@@ -181,7 +185,19 @@ export default {
             });
           }
         }
-        console.log(this.competences);
+
+        const baseURI =
+          "http://bonapp.floriancomte.fr/templates/" + this.template._id;
+        this.$http.get(baseURI).then(result => {
+          console.log(result.data);
+          this.template = result.data;
+        });
+
+
+        
+
+        
+        console.log(this.composante);
         console.log(this.familles);
       });
       /*
@@ -218,8 +234,27 @@ export default {
 
     deleteItem(item) {
       const index = this.competences.indexOf(item);
+      console.log(item);
+      const baseURI =
+        "http://bonapp.floriancomte.fr/templates/" +
+        this.template._id +
+        "/semestres/" +
+        this.semestre._id +
+        "/composantes/" +
+        this.composante._id +
+        "/familles/" +
+        item.famille._id +
+        "/competences/" +
+        item._id;
       confirm("Are you sure you want to delete this item?") &&
-        this.competences.splice(index, 1);
+        this.$http
+          .delete(baseURI)
+          .then(result => {
+            this.competences.splice(index, 1);
+          })
+          .catch(error => {
+            console.log(error);
+          });
     },
 
     close() {
@@ -232,18 +267,41 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.competences[this.editedIndex], this.editedItem);
-      } else {
-        
+        console.log(this.editedItem);
         const baseURI =
           "http://bonapp.floriancomte.fr/templates/" +
           this.template._id +
           "/semestres/" +
           this.semestre._id +
-          "/composantes/"+
-          this.composante._id+
-          "/familles/"+
-          this.editedItem.famille+
+          "/composantes/" +
+          this.composante._id +
+          "/familles/" +
+          this.editedItem.famille._id +
+          "/competences/" +
+          this.editedItem._id;
+        this.$http
+          .patch(baseURI, {
+            nom: this.editedItem.nom,
+            coefficient: this.editedItem.coefficient,
+            description: this.editedItem.description
+          })
+          .then(result => {
+            Object.assign(this.competences[this.editedIndex], this.editedItem);
+            this.initialize();
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      } else {
+        const baseURI =
+          "http://bonapp.floriancomte.fr/templates/" +
+          this.template._id +
+          "/semestres/" +
+          this.semestre._id +
+          "/composantes/" +
+          this.composante._id +
+          "/familles/" +
+          this.editedItem.famille +
           "/competences";
         this.$http
           .post(baseURI, {
@@ -258,8 +316,8 @@ export default {
           .catch(error => {
             console.log(error);
           });
-          
-         console.log(this.editedItem.famille);
+
+        console.log(this.editedItem.famille);
         //this.competences.push(this.editedItem);
       }
       this.close();

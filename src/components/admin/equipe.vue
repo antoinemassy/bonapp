@@ -3,10 +3,11 @@
     <v-container grid-list-md>
       <v-switch
         v-model="switch1"
+        @change="test()"
         true-value="Synthèse"
         false-value="Ensemble"
         :label="`Vue: ${switch1.toString()}`"
-        @change="test()"
+        
       ></v-switch>
 
       <v-layout row justify-space-around mb-4 pt-0 mt-0>
@@ -214,8 +215,21 @@ export default {
       }
     ]
   }),
+
+  watch: {
+      switch1(newValue){
+        //called whenever switch1 changes
+        
+        if(newValue==="Ensemble"){
+          this.$router.push('/admin/equipe2');
+        }
+      }
+    },
   methods: {
-    
+    test: function() {
+      console.log("test")
+    },
+
     moyenneS1: function(n) {
       return (n.GESGrade + n.electroniqueGrade + n.signalGrade) / 3;
     },

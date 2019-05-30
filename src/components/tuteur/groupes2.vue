@@ -16,12 +16,12 @@
       </v-flex>
     </v-layout>
 
-    <v-layout row justify-space-around v-for="(item, index) in familles" :key="item.id">
+    <v-layout row justify-space-around>
       <v-flex md11 xs12>
         <template>
           <div >
             <v-toolbar flat color="secondary">
-              <v-toolbar-title>{{familles[index].name}}</v-toolbar-title>
+              <v-toolbar-title>Competences</v-toolbar-title>
               <v-divider class="mx-2" inset vertical></v-divider>
               <v-spacer></v-spacer>
               <v-dialog v-model="dialog" max-width="1000px">
@@ -135,7 +135,7 @@ export default {
 
   methods: {
     initialize() {
-      this.familles = [{ name: "Agir en communiquant " }, { name: "Vivre " }];
+      this.familles = [{ name: "Agir en communiquant " }];
       this.composantes = [{ name: "Compétences générales (Elec et Signal)" }];
       this.equipe= "G1A";
       this.competences = [

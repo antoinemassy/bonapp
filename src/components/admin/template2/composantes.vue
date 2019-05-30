@@ -35,6 +35,9 @@
                       solo
                     ></v-select>
                   </v-flex>
+                  <v-card-title>
+                    <span class="headline">Familles</span>
+                  </v-card-title>
                   <v-flex xs12 sm12 md12>
                     <v-list>
                       <v-list-tile v-for="item in editedItem.familles" :key="item.familles">
@@ -50,7 +53,7 @@
                       </v-list-tile>
                     </v-list>
                   </v-flex>
-                  <v-flex xs12 sm12 md12>
+                  <v-flex xs12 sm12 md8 ml-3>
                     <v-subheader>Créer une famille</v-subheader>
                     <v-layout row wrap>
                       <v-flex xs12 sm5 md10>
@@ -260,7 +263,11 @@ export default {
       this.$http
         .post(baseURI, { nom: newFamille.nom })
         .then(result => {
-          this.editedItem.familles.push({ nom: newFamille.nom });
+          console.log(result);
+          this.editedItem.familles.push({
+            nom: result.data.nom,
+            _id: result.data._id
+          });
           this.newFamille = Object.assign({}, { nom: "" });
         })
         .catch(error => {
@@ -270,7 +277,7 @@ export default {
 
     deleteFamille(item) {
       const index = this.editedItem.familles.indexOf(item);
-      console.log(index)
+      console.log(index);
       const baseURI =
         "http://bonapp.floriancomte.fr/templates/" +
         this.template._id +
@@ -278,18 +285,17 @@ export default {
         this.editedItem.semestre._id +
         "/composantes/" +
         this.editedItem._id +
-        "/familles/"+
+        "/familles/" +
         item._id;
       confirm("Are you sure you want to delete this item?") &&
         this.$http
           .delete(baseURI)
           .then(result => {
-           this.editedItem.familles.splice(index, 1);
+            this.editedItem.familles.splice(index, 1);
           })
           .catch(error => {
             console.log(error);
           });
-         
     },
 
     open(item) {

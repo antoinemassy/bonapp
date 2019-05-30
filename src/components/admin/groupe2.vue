@@ -44,44 +44,37 @@
                         </v-flex>
                       </v-layout>
 
+                      <v-flex xs12 sm12 md12>
+                        <v-list>
+                          <v-list-tile v-for="item in editedItem.equipes" :key="item.equipes">
+                            <v-list-tile-content>
+                              <v-list-tile-title v-text="item.name"></v-list-tile-title>
+                            </v-list-tile-content>
+                            <v-list-tile-action>
+                              <v-btn icon ripple @click="deleteEquipe(item)">
+                                <v-icon color="grey lighten-1">delete</v-icon>
+                              </v-btn>
+                            </v-list-tile-action>
+                          </v-list-tile>
+                        </v-list>
+                      </v-flex>
 
                       <v-flex xs12 sm12 md12>
-                  <v-list>
-                    <v-list-tile v-for="item in editedItem.equipes" :key="item.equipes">
-                      <v-list-tile-content>
-                          <v-list-tile-title v-text="item.name"></v-list-tile-title>
-                      </v-list-tile-content>
-                      <v-list-tile-action>
-                        <v-btn icon ripple @click="deleteEquipe(item)">
-                          <v-icon color="grey lighten-1">delete</v-icon>
-                        </v-btn>
-                      </v-list-tile-action>
-
-                    </v-list-tile>
-                  </v-list>
-                  </v-flex>
-
-                      <template>
-                        <v-combobox
-                          v-model="editedItem.equipes"
-                          label="Equipes"
-                          chips
-                          clearable
-                          prepend-icon="filter_list"
-                          solo
-                          multiple
-                        >
-                          <template v-slot:selection="data">
-                            <v-chip
-                              :selected="data.selected"
-                              close
-                              @input="data.parent.selectItem(data.item)"
-                            >
-                              <strong>{{data.item}}</strong>&nbsp;
-                            </v-chip>
-                          </template>
-                        </v-combobox>
-                      </template>
+                        <v-subheader>Créer une famille</v-subheader>
+                        <v-layout row wrap>
+                          <v-flex xs12 sm5 md10>
+                            <v-text-field
+                              v-model="newEquipe.nom"
+                              label="Entrer le nom d’une nouvelle famille"
+                              single-line
+                              solo
+                            ></v-text-field>
+                          </v-flex>
+                          <v-btn icon ripple @click="addEquipe(newEquipe )">
+                            <v-icon color="grey lighten-1">add_circle</v-icon>
+                          </v-btn>
+                        </v-layout>
+                      </v-flex>
                     </v-container>
                   </v-card-text>
 
@@ -103,7 +96,10 @@
               class="elevation-1"
             >
               <template v-slot:items="props">
-                <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ props.item.name }}</td>
+                <td
+                  class="text-xs-center"
+                  @click="props.expanded = !props.expanded"
+                >{{ props.item.name }}</td>
                 <td class="text-xs-right">
                   <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
                   <v-icon small @click="deleteItem(props.item)">delete</v-icon>
@@ -131,6 +127,7 @@
 export default {
   data: () => ({
     template: { name: "Promotion 2020" },
+    newEquipe: "",
     dialog: false,
     headers: [
       {
@@ -175,18 +172,28 @@ export default {
       this.groupes = [
         {
           name: "G1",
-          equipes: [{name:"G1A"}, {name:"G1B"}, {name:"G1C"}]
+          equipes: [{ name: "G1A" }, { name: "G1B" }, { name: "G1C" }]
         },
         {
           name: "G2",
-          equipes: [{name:"G2A"}]
+          equipes: [{ name: "G2A" }]
         },
         {
           name: "G3",
-          equipes: [{name:"G3A"}]
+          equipes: [{ name: "G3A" }]
         }
       ];
     },
+
+    addEquipe(newEquipe) {
+      this.editedItem.equipes.push({
+        newEquipe
+        //nom: result.data.nom,
+        //_id: result.data._id
+      });
+      this.newEquipe = Object.assign({}, "");
+    },
+
     remove(item) {
       this.editedItem.equipes.splice(this.editedItem.equipes.indexOf(item), 1);
       this.editedItem.equipes = [...this.editedItem.equipes];

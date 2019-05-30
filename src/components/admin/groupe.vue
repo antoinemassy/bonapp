@@ -9,7 +9,7 @@
           <v-list>
             <v-list-tile v-for="item in promotions" :key="item.title">
               <v-list-tile-content>
-                <v-list-tile-title v-text="item.title"></v-list-tile-title>
+                <router-link style="text-decoration:none" :to="{path: '/admin/promotion/'+ item._id}"><v-list-tile-title v-text="item.title" ></v-list-tile-title></router-link>
               </v-list-tile-content>
               <v-spacer></v-spacer>
               <v-list-tile-content>
@@ -32,7 +32,13 @@
             </v-flex>
             <v-spacer></v-spacer>
             <v-flex xs12 sm5 md3>
-              <v-select :items="templates" item-text="title" v-model="newitem.template" label="Template" solo></v-select>
+              <v-select
+                :items="templates"
+                item-text="nom"
+                v-model="newitem.template"
+                label="Template"
+                solo
+              ></v-select>
             </v-flex>
             <v-spacer></v-spacer>
             <v-btn icon ripple @click="addItem(newitem)">
@@ -49,11 +55,11 @@
 export default {
   data() {
     return {
-      newitem:{title:"", template:""},
-      existingitem:{title:"", template:""},
-      defaultitem:{title:"", template:""},
-      promotions: [{title:"promotest", template:"2020"}],
-      templates: [{title: "2020"},{title: "2021"}]
+      newitem: { title: "", template: "" },
+      existingitem: { title: "", template: "" },
+      defaultitem: { title: "", template: "" },
+      promotions: [{ title: "promotest", template: "2020" }],
+      templates: [{ title: "2020" }, { title: "2021" }]
     };
   },
   created() {
@@ -65,14 +71,22 @@ export default {
       confirm("Are you sure you want to delete this item?") &&
         this.promotions.splice(index, 1);
     },
-    addItem(item){
-        this.promotions.push(item);
-        this.newitem = Object.assign({}, this.defaultitem);
-        this.existingitem = Object.assign({}, this.defaultitem);
+    addItem(item) {
+      this.promotions.push(item);
+      this.newitem = Object.assign({}, this.defaultitem);
+      this.existingitem = Object.assign({}, this.defaultitem);
     },
-    initialize: function(){
-       //this.feetpromotions();
-     }
+    initialize: function() {
+      // const baseURI = "http://bonapp.floriancomte.fr/promotions";
+      // this.$http.get(baseURI).then(result => {
+      //   this.promotions = result.data;
+      // });
+
+      const baseURI = "http://bonapp.floriancomte.fr/templates";
+      this.$http.get(baseURI).then(result => {
+        this.templates = result.data;
+      });
+    }
   }
 };
 </script>
