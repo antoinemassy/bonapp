@@ -29,6 +29,9 @@
               <v-spacer></v-spacer>
               <v-dialog v-model="dialog" max-width="700px">
                 <template v-slot:activator="{ on }">
+                  <v-btn @click="initialize()">
+                    <v-icon color="grey lighten">refresh</v-icon>
+                  </v-btn>
                   <v-btn v-on="on">
                     <v-icon color="grey lighten">add_circle</v-icon>
                   </v-btn>
@@ -154,17 +157,12 @@ export default {
 
   methods: {
     initialize() {
-      
       const baseURI =
-        "http://bonapp.floriancomte.fr/promotions/" +
-        this.promotion._id;
-        this.$http.get(baseURI).then(result => {
-        
-        this.promotion = {_id:this.promotion._id, nom: result.data.nom};
+        "http://bonapp.floriancomte.fr/promotions/" + this.promotion._id;
+      this.$http.get(baseURI).then(result => {
+        this.promotion = { _id: this.promotion._id, nom: result.data.nom };
         console.log(result.data);
       });
-
-
 
       const baseURI2 =
         "http://bonapp.floriancomte.fr/promotions/" +
@@ -172,7 +170,7 @@ export default {
         "/groupes/" +
         this.groupe._id +
         "/equipes/" +
-        this.equipe._id+
+        this.equipe._id +
         "/eleves";
       this.$http.get(baseURI2).then(result => {
         console.log(result.data);
@@ -215,10 +213,10 @@ export default {
         "/groupes/" +
         this.groupe._id +
         "/equipes/" +
-        this.equipe._id+
-        "/eleves/"+
+        this.equipe._id +
+        "/eleves/" +
         item.code;
-        console.log(baseURI);
+      console.log(baseURI);
       confirm("Are you sure you want to delete this item?") &&
         this.$http
           .delete(baseURI)
@@ -242,15 +240,14 @@ export default {
       if (this.editedIndex > -1) {
         Object.assign(this.eleves[this.editedIndex], this.editedItem);
       } else {
-        
         const baseURI =
-        "http://bonapp.floriancomte.fr/promotions/" +
-        this.promotion._id +
-        "/groupes/" +
-        this.groupe._id +
-        "/equipes/" +
-        this.equipe._id+
-        "/eleves";
+          "http://bonapp.floriancomte.fr/promotions/" +
+          this.promotion._id +
+          "/groupes/" +
+          this.groupe._id +
+          "/equipes/" +
+          this.equipe._id +
+          "/eleves";
         this.$http
           .post(baseURI, {
             prenom: this.editedItem.prenom,

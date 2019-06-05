@@ -28,6 +28,9 @@
               <v-spacer></v-spacer>
               <v-dialog v-model="dialog" max-width="600px">
                 <template v-slot:activator="{ on }">
+                  <v-btn @click="reloadPage()">
+                    <v-icon color="grey lighten">refresh</v-icon>
+                  </v-btn>
                   <v-btn v-on="on">
                     <v-icon color="grey lighten">add_circle</v-icon>
                   </v-btn>
@@ -123,12 +126,13 @@ export default {
       famille: "",
       nom: "",
       description: "",
-      coefficient: 0
+      coefficient: 1
     },
     defaultItem: {
+      famille: "",
       name: "",
       description: "",
-      coefficient: 0
+      coefficient: 1
     }
   }),
 
@@ -154,6 +158,9 @@ export default {
   },
 
   methods: {
+    reloadPage(){
+    window.location.reload()
+  },
     initialize() {
       this.composantes = [];
       this.familles = [];
@@ -199,12 +206,11 @@ export default {
           "/semestres/" +
           this.semestre._id +
           "/composantes/" +
-          this.composante._id ;
+          this.composante._id;
         this.$http.get(baseURI2).then(result => {
           console.log(result.data);
           this.composante = result.data;
         });
-
         console.log(this.composante);
         console.log(this.familles);
       });
@@ -295,7 +301,7 @@ export default {
           })
           .then(result => {
             Object.assign(this.competences[this.editedIndex], this.editedItem);
-            this.initialize();
+           
           })
           .catch(error => {
             console.log(error);
@@ -319,13 +325,12 @@ export default {
           })
           .then(result => {
             this.competences.push(this.editedItem);
-            this.initialize();
+           
           })
           .catch(error => {
             console.log(error);
           });
 
-        console.log(this.editedItem.famille);
         //this.competences.push(this.editedItem);
       }
       this.close();

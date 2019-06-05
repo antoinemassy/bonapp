@@ -1,5 +1,5 @@
 <template>
-  <v-flex md3>
+  <v-flex md4>
     <div>
       <v-toolbar flat color="secondary">
         <v-toolbar-title>Semestres</v-toolbar-title>
@@ -7,6 +7,9 @@
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on }">
+            <v-btn  @click="initialize()" >
+              <v-icon color="grey lighten" >refresh</v-icon>
+            </v-btn>
             <v-btn v-on="on">
               <v-icon color="grey lighten">add_circle</v-icon>
             </v-btn>
@@ -94,6 +97,9 @@ export default {
   },
 
   methods: {
+    
+      
+    
     initialize() {
       const baseURI =
         "http://bonapp.floriancomte.fr/templates/" +

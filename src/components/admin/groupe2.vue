@@ -19,7 +19,7 @@
 
     <v-layout row justify-space-around>
       <template>
-        <v-flex md3>
+        <v-flex md4>
           <div>
             <v-toolbar flat color="secondary">
               <v-toolbar-title>Groupes</v-toolbar-title>
@@ -27,6 +27,9 @@
               <v-spacer></v-spacer>
               <v-dialog v-model="dialog" max-width="500px">
                 <template v-slot:activator="{ on }">
+                  <v-btn @click="initialize()">
+                    <v-icon color="grey lighten">refresh</v-icon>
+                  </v-btn>
                   <v-btn v-on="on">
                     <v-icon color="grey lighten">add_circle</v-icon>
                   </v-btn>
@@ -43,37 +46,38 @@
                           <v-text-field v-model="editedItem.nom" label="Nom"></v-text-field>
                         </v-flex>
                       </v-layout>
+                      <v-flex v-if="this.editedIndex !== -1">
+                        <v-flex xs12 sm12 md12>
+                          <v-list>
+                            <v-list-tile v-for="item in editedItem.equipes" :key="item.equipes">
+                              <v-list-tile-content>
+                                <v-list-tile-title v-text="item.nom"></v-list-tile-title>
+                              </v-list-tile-content>
+                              <v-list-tile-action>
+                                <v-btn icon ripple @click="deleteEquipe(item)">
+                                  <v-icon color="grey lighten-1">delete</v-icon>
+                                </v-btn>
+                              </v-list-tile-action>
+                            </v-list-tile>
+                          </v-list>
+                        </v-flex>
 
-                      <v-flex xs12 sm12 md12>
-                        <v-list>
-                          <v-list-tile v-for="item in editedItem.equipes" :key="item.equipes">
-                            <v-list-tile-content>
-                              <v-list-tile-title v-text="item.nom"></v-list-tile-title>
-                            </v-list-tile-content>
-                            <v-list-tile-action>
-                              <v-btn icon ripple @click="deleteEquipe(item)">
-                                <v-icon color="grey lighten-1">delete</v-icon>
-                              </v-btn>
-                            </v-list-tile-action>
-                          </v-list-tile>
-                        </v-list>
-                      </v-flex>
-
-                      <v-flex xs12 sm12 md12>
-                        <v-subheader>Créer une équipe</v-subheader>
-                        <v-layout row wrap>
-                          <v-flex xs12 sm5 md10>
-                            <v-text-field
-                              v-model="newEquipe.nom"
-                              label="Entrer le nom d’une nouvelle équipe"
-                              single-line
-                              solo
-                            ></v-text-field>
-                          </v-flex>
-                          <v-btn icon ripple @click="addEquipe(newEquipe)">
-                            <v-icon color="grey lighten-1">add_circle</v-icon>
-                          </v-btn>
-                        </v-layout>
+                        <v-flex xs12 sm12 md12>
+                          <v-subheader>Créer une équipe</v-subheader>
+                          <v-layout row wrap>
+                            <v-flex xs12 sm5 md10>
+                              <v-text-field
+                                v-model="newEquipe.nom"
+                                label="Entrer le nom d’une nouvelle équipe"
+                                single-line
+                                solo
+                              ></v-text-field>
+                            </v-flex>
+                            <v-btn icon ripple @click="addEquipe(newEquipe)">
+                              <v-icon color="grey lighten-1">add_circle</v-icon>
+                            </v-btn>
+                          </v-layout>
+                        </v-flex>
                       </v-flex>
                     </v-container>
                   </v-card-text>
@@ -99,7 +103,7 @@
                 <td
                   class="text-xs-center"
                   @click="props.expanded = !props.expanded"
-                >{{ props.item.nom }} </td>
+                >{{ props.item.nom }}</td>
                 <td class="text-xs-right">
                   <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
                   <v-icon small @click="deleteItem(props.item)">delete</v-icon>
@@ -109,12 +113,14 @@
                 <v-btn color="primary" @click="initialize">Reset</v-btn>
               </template>
               <template v-slot:expand="props">
-                
-                  <v-card v-for="item in props.item.equipes" :key="item" flat>
-                    <router-link style="text-decoration:none" :to="{path: '/admin/promotion/'+ promotion._id+ '/groupe/' + props.item._id + '/equipe/' + item._id}">
+                <v-card v-for="item in props.item.equipes" :key="item" flat>
+                  <router-link
+                    style="text-decoration:none"
+                    :to="{path: '/admin/promotion/'+ promotion._id+ '/groupe/' + props.item._id + '/equipe/' + item._id}"
+                  >
                     <v-card-text>{{ item.nom }}</v-card-text>
-                    </router-link>
-                  </v-card>
+                  </router-link>
+                </v-card>
               </template>
             </v-data-table>
           </div>
@@ -174,11 +180,9 @@ export default {
   methods: {
     initialize() {
       const baseURI =
-        "http://bonapp.floriancomte.fr/promotions/" +
-        this.promotion._id;
-        this.$http.get(baseURI).then(result => {
-        
-        this.promotion = {_id:this.promotion._id, nom: result.data.nom};
+        "http://bonapp.floriancomte.fr/promotions/" + this.promotion._id;
+      this.$http.get(baseURI).then(result => {
+        this.promotion = { _id: this.promotion._id, nom: result.data.nom };
         console.log(result.data);
       });
       const baseURI2 =
@@ -216,7 +220,7 @@ export default {
         "http://bonapp.floriancomte.fr/promotions/" +
         this.promotion._id +
         "/groupes/" +
-        this.editedItem._id+
+        this.editedItem._id +
         "/equipes";
       this.$http
         .post(baseURI, { nom: newEquipe.nom })
@@ -295,6 +299,7 @@ export default {
           })
           .then(result => {
             this.groupes.push(this.editedItem);
+            this.initialize();
           })
           .catch(error => {
             console.log(error);

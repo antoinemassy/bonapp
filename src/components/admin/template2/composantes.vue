@@ -6,9 +6,12 @@
         <v-divider class="mx-2" inset vertical></v-divider>
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="700px">
-          <template v-slot:activator="{ on }">
-            <v-btn v-on="on">
-              <v-icon color="grey lighten">add_circle</v-icon>
+          <template v-slot:activator="{ on }" >
+            <v-btn  @click="initialize()" >
+              <v-icon color="grey lighten" >refresh</v-icon>
+            </v-btn>
+            <v-btn v-on="on" >
+              <v-icon color="grey lighten" >add_circle</v-icon>
             </v-btn>
           </template>
           <v-card>
@@ -35,39 +38,41 @@
                       solo
                     ></v-select>
                   </v-flex>
-                  <v-card-title>
-                    <span class="headline">Familles</span>
-                  </v-card-title>
-                  <v-flex xs12 sm12 md12>
-                    <v-list>
-                      <v-list-tile v-for="item in editedItem.familles" :key="item.familles">
-                        <v-list-tile-content>
-                          <v-list-tile-title v-text="item.nom"></v-list-tile-title>
-                        </v-list-tile-content>
+                  <v-flex v-if="this.editedIndex !== -1"> 
+                    <v-card-title>
+                      <span class="headline">Familles</span>
+                    </v-card-title>
+                    <v-flex xs12 sm12 md12>
+                      <v-list>
+                        <v-list-tile v-for="item in editedItem.familles" :key="item.familles">
+                          <v-list-tile-content>
+                            <v-list-tile-title v-text="item.nom"></v-list-tile-title>
+                          </v-list-tile-content>
 
-                        <v-list-tile-action>
-                          <v-btn icon ripple @click="deleteFamille(item)">
-                            <v-icon color="grey lighten-1">delete</v-icon>
-                          </v-btn>
-                        </v-list-tile-action>
-                      </v-list-tile>
-                    </v-list>
-                  </v-flex>
-                  <v-flex xs12 sm12 md8 ml-3>
-                    <v-subheader>Créer une famille</v-subheader>
-                    <v-layout row wrap>
-                      <v-flex xs12 sm5 md10>
-                        <v-text-field
-                          v-model="newFamille.nom"
-                          label="Entrer le nom d’une nouvelle famille"
-                          single-line
-                          solo
-                        ></v-text-field>
-                      </v-flex>
-                      <v-btn icon ripple @click="addFamille(newFamille )">
-                        <v-icon color="grey lighten-1">add_circle</v-icon>
-                      </v-btn>
-                    </v-layout>
+                          <v-list-tile-action>
+                            <v-btn icon ripple @click="deleteFamille(item)">
+                              <v-icon color="grey lighten-1">delete</v-icon>
+                            </v-btn>
+                          </v-list-tile-action>
+                        </v-list-tile>
+                      </v-list>
+                    </v-flex>
+                    <v-flex xs12 sm12 md8 ml-3>
+                      <v-subheader>Créer une famille</v-subheader>
+                      <v-layout row wrap>
+                        <v-flex xs12 sm5 md10>
+                          <v-text-field
+                            v-model="newFamille.nom"
+                            label="Entrer le nom d’une nouvelle famille"
+                            single-line
+                            solo
+                          ></v-text-field>
+                        </v-flex>
+                        <v-btn icon ripple @click="addFamille(newFamille )">
+                          <v-icon color="grey lighten-1">add_circle</v-icon>
+                        </v-btn>
+                      </v-layout>
+                    </v-flex>
                   </v-flex>
                 </v-layout>
               </v-container>
@@ -224,7 +229,6 @@ export default {
     },
 
     editItem(item) {
-      console.log(item);
       this.editedIndex = this.composantes.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
