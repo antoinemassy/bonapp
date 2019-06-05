@@ -41,7 +41,9 @@
         if(this.nom && this.mdp ==="tuteur"){
           this.$router.push('/tuteur/profil');
         }
-        
+        if(this.nom && this.mdp ==="eleve"){
+          this.$router.push('/eleve/profil');
+        }
 
         
       }

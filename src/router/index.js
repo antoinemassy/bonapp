@@ -16,7 +16,8 @@ import Tuteur from '../components/tuteur/tuteur.vue'
 import Etudiants from '../components/tuteur/etudiants.vue'
 import Groupes from '../components/tuteur/groupes.vue'
 import Groupes2 from '../components/tuteur/groupes2.vue'
-
+import Eleve from '../components/eleve/eleve.vue'
+import ProfilEleve from '../components/eleve/profil.vue'
 
 
 Vue.use(VueRouter)
@@ -99,6 +100,18 @@ export default new VueRouter({
                     path: '/tuteur/groupes2',
                     name: 'Groupes2',
                     component: Groupes2,
+                }
+            ]
+        },
+
+        {
+            path: '/eleve',
+            name: 'Eleve',
+            component: Eleve,
+            children: [{
+                    path: '/eleve/profil',
+                    name: 'ProfilEleve',
+                    component: ProfilEleve,
                 }
             ]
         },

@@ -8,7 +8,7 @@
     
     <v-navigation-drawer v-model="drawer" fixed app close  >
       <v-list dense>
-        <v-list-tile @click.stop="left = !left" :to="{path: '/tuteur/profil'}">
+        <v-list-tile @click.stop="left = !left" :to="{path: '/eleve/profil'}">
           <v-list-tile-action>
             <v-icon>person</v-icon>
           </v-list-tile-action>
@@ -19,34 +19,12 @@
       </v-list>
 
       <v-list dense>
-        <v-list-tile @click.stop="left = !left" :to="{path: '/tuteur/groupes'}">
-          <v-list-tile-action>
-            <v-icon>groups</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Groupes</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-
-      <v-list dense>
         <v-list-tile @click.stop="left = !left">
           <v-list-tile-action>
-            <v-icon>favorite</v-icon>
+            <v-icon>assignment</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>Favoris</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-
-      <v-list dense>
-        <v-list-tile @click.stop="left = !left" :to="{path: '/tuteur/etudiants'}">
-          <v-list-tile-action>
-            <v-icon>face</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Etudiants</v-list-tile-title>
+            <v-list-tile-title>Mes fiches</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -57,7 +35,7 @@
             <v-icon>people_outline</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>Equipe</v-list-tile-title>
+            <v-list-tile-title>Mon equipe</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
