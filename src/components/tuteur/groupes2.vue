@@ -62,7 +62,7 @@
                           v-for="item in editedItem.Notations"
                           :key="item.Notations"
                         >
-                          <span class="headline">{{item.eleve}}</span>
+                          <span class="headline">{{item.eleve}}</span> 
                           <v-textarea v-model="item.obs_ind" label="Observation individuelle"></v-textarea>
                           <v-select
                             v-model="item.niveau_actuel.nom"
