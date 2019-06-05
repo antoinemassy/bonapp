@@ -12,20 +12,19 @@
 
     <v-layout row justify-center mt-1>
       <v-flex md2 xs4>
-        <v-select :items="composantes" item-text="name" label="Composante" solo-inverted></v-select>
+        <v-select :items="composantes" item-text="nom" label="Composante" solo-inverted></v-select>
       </v-flex>
     </v-layout>
 
     <v-layout row justify-space-around>
       <v-flex md11 xs12>
         <template>
-          <div >
+          <div>
             <v-toolbar flat color="secondary">
               <v-toolbar-title>Competences</v-toolbar-title>
               <v-divider class="mx-2" inset vertical></v-divider>
               <v-spacer></v-spacer>
-              <v-dialog v-model="dialog" max-width="1000px">
-                
+              <v-dialog v-model="dialog" max-width="600px">
                 <v-card>
                   <v-card-title>
                     <span class="headline">{{ formTitle }}</span>
@@ -33,18 +32,44 @@
 
                   <v-card-text>
                     <v-container grid-list-md>
-                      <v-layout wrap>
-                        <v-flex xs12 sm6 md2>
-                          <v-text-field v-model="editedItem.name"  readonly label="Competence name"></v-text-field>
+                      <v-layout wrap column>
+                        <v-flex xs12 sm6 md3>
+                          <v-text-field v-model="editedItem.famille.nom" readonly label="Famille"></v-text-field>
                         </v-flex>
+                        <v-flex xs12 sm6 md3>
+                          <v-text-field
+                            v-model="editedItem.nom"
+                            readonly
+                            label="Nom de la Compétence"
+                          ></v-text-field>
+                        </v-flex>
+                        <v-card-title>
+                          <span class="headline">Equipe</span>
+                        </v-card-title>
                         <v-flex xs12 sm6 md4>
-                          <v-textarea v-model="editedItem.description" readonly label="Description"></v-textarea>
+                          <v-textarea
+                            v-model="editedItem.observationEquipe"
+                            label="Observation sur l'equipe"
+                          ></v-textarea>
                         </v-flex>
-                        <v-flex xs12 sm6 md4>
-                          <v-textarea v-model="editedItem.observationEquipe" label="Observation sur l'equipe"></v-textarea>
-                        </v-flex>
-                        <v-flex xs12 sm6 md2>
-                          <v-text-field v-model="editedItem.coefficient" readonly label="Coefficient"></v-text-field>
+                        <v-card-title>
+                          <span class="headline">Eleves</span>
+                        </v-card-title>
+                        <v-flex
+                          xs12
+                          sm6
+                          md3
+                          v-for="item in editedItem.Notations"
+                          :key="item.Notations"
+                        >
+                          <span class="headline">{{item.eleve}}</span>
+                          <v-textarea v-model="item.obs_ind" label="Observation individuelle"></v-textarea>
+                          <v-select
+                            v-model="item.niveau_actuel.nom"
+                            :items="niveaux"
+                            item-text="nom"
+                            label="Niveau individuel"
+                          ></v-select>
                         </v-flex>
                       </v-layout>
                     </v-container>
@@ -60,7 +85,8 @@
             </v-toolbar>
             <v-data-table :headers="headers" :items="competences" hide-actions class="elevation-1">
               <template v-slot:items="props">
-                <td>{{ props.item.name }}</td>
+                <td>{{ props.item.famille.nom }}</td>
+                <td>{{ props.item.nom }}</td>
                 <td>{{ props.item.description }}</td>
                 <td>{{ props.item.observationEquipe }}</td>
                 <td class="text-xs-center">{{ props.item.coefficient }}</td>
@@ -84,34 +110,50 @@
 <script>
 export default {
   data: () => ({
+    items: ["Streaming", "Eating"],
+    chips: [
+      "Programming",
+      "Playing video games",
+      "Watching movies",
+      "Sleeping"
+    ],
     dialog: false,
-    template: { name: "Template 2020" },
-    composante: { name: "Compétences générales (Informatique et Télécom)" },
+    template: { nom: "Template 2020" },
+    composante: { nom: "Compétences générales (Informatique et Télécom)" },
     headers: [
+      {
+        text: "Famille",
+        align: "left",
+        value: "famille"
+      },
       {
         text: "Compétence",
         align: "left",
         sortable: false,
-        value: "name"
+        value: "nom"
       },
       { text: "Description", value: "description" },
       { text: "Observation sur l'équipe", value: "observationEquipe" },
       { text: "Coefficient", value: "coefficient" },
-      { text: "Actions", align: "right", value: "name", sortable: false }
+      { text: "Actions", align: "right", value: "nom", sortable: false }
     ],
     familles: [],
     competences: [],
     editedIndex: -1,
     editedItem: {
-      name: "",
+      famille: "",
+      nom: "",
       description: "",
-      observartionEquipe:"",
+      observartionEquipe: "",
+      Notations: "",
       coefficient: 0
     },
     defaultItem: {
-      name: "",
+      famille: "",
+      nom: "",
       description: "",
-      observartionEquipe:"",
+      observartionEquipe: "",
+      Notations: "",
       coefficient: 0
     }
   }),
@@ -132,22 +174,111 @@ export default {
     this.initialize();
   },
 
+  
+
   methods: {
     initialize() {
-      this.familles = [{ name: "Agir en communiquant " }];
-      this.composantes = [{ name: "Compétences générales (Elec et Signal)" }];
-      this.equipe= "G1A";
+      this.familles = [{ nom: "Agir en communiquant " }];
+      this.composantes = [{ nom: "Compétences générales (Elec et Signal)" }];
+      this.equipe = "G1A";
+      this.niveaux = [
+        {
+          nom: "Non acquis",
+        },
+        {
+          nom: "Loin",
+        },
+        {
+          nom: "Proche",
+        }
+      ];
       this.competences = [
         {
-          name: "Communiquer à l'oral",
-          description: "Il est tres important de bien savoir communiquer à l'oral pour se faire comprendre par son entrourage... ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-          observationEquipe:"Tres bonne equipe",
+          famille: {
+            nom: "FamilleTest"
+          },
+          nom: "Communiquer à l'oral",
+          description:
+            "Il est tres important de bien savoir communiquer à l'oral pour se faire comprendre par son entrourage... ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+          observationEquipe: "Tres bonne equipe",
+          Notations: [
+            {
+              eleve: "Antoine",
+              id_competence: 124,
+              obs_ind: "fort cet eleve",
+              niveau_actuel: {
+                date: "01-23-1998",
+                niveau_id: 1,
+                nom: "Non acquis"
+              },
+              historique: [
+                {
+                  date: "01-23-1998",
+                  niveau_id: 1,
+                  nom: "Non acquis"
+                },
+                {
+                  date: "02-22-1998",
+                  niveau_id: 2,
+                  nom: "fort"
+                }
+              ]
+            },
+            {
+              eleve: "Camille",
+              id_competence: 124,
+              obs_ind: "nulllle",
+              niveau_actuel: {
+                date: "01-23-1998",
+                nom:"forte",
+                niveau_id: 1
+              },
+              historique: [
+                {
+                  date: "01-23-1998",
+                  niveau_id: 1
+                },
+                {
+                  date: "02-22-1998",
+                  niveau_id: 2
+                }
+              ]
+            }
+          ],
           coefficient: 1
         },
         {
-          name: "Communiquer à l'écrit",
-          description: "- fournir le schéma fonctionnel d’un système d’analyse de signaux numériques  - Identifier les principales fonctions et fournir un schéma-bloc - Prendre en compte les contraintes d’implémentation - fournir le schéma fonctionnel d’un système d’analyse de signaux numériques",
-          observationEquipe:"Tres mauvaise equipe a l'ecrit qwertyuiopasdfghjklzxcvbnm",
+          famille: {
+            nom: "FamilleTest2"
+          },
+          nom: "Communiquer à l'écrit",
+          description:
+            "- fournir le schéma fonctionnel d’un système d’analyse de signaux numériques  - Identifier les principales fonctions et fournir un schéma-bloc - Prendre en compte les contraintes d’implémentation - fournir le schéma fonctionnel d’un système d’analyse de signaux numériques",
+          observationEquipe:
+            "Tres mauvaise equipe a l'ecrit qwertyuiopasdfghjklzxcvbnm",
+          Notations: [
+            {
+              id_eleve: 345,
+              eleve: "test",
+              id_competence: 124,
+              obs_ind: "niceuuuh",
+              niveau_actuel: {
+                date: "01-23-1998",
+                nom:"Non acquis",
+                niveau_id: 1
+              },
+              historique: [
+                {
+                  date: "01-23-1998",
+                  niveau_id: 1
+                },
+                {
+                  date: "02-22-1998",
+                  niveau_id: 2
+                }
+              ]
+            }
+          ],
           coefficient: 2
         }
       ];
@@ -159,7 +290,6 @@ export default {
       this.dialog = true;
     },
 
-   
     close() {
       this.dialog = false;
       setTimeout(() => {

@@ -107,7 +107,6 @@ export default {
   data: () => ({
     promotion: {},
     groupe: {},
-    template: { name: "Promotion 2020" },
     equipe: { name: "G1A" },
     genres: [{ name: "M" }, { name: "F" }],
     dialog: false,
@@ -155,6 +154,7 @@ export default {
 
   methods: {
     initialize() {
+      
       const baseURI =
         "http://bonapp.floriancomte.fr/promotions/" +
         this.promotion._id;
@@ -208,8 +208,26 @@ export default {
 
     deleteItem(item) {
       const index = this.eleves.indexOf(item);
+      console.log(index);
+      const baseURI =
+        "http://bonapp.floriancomte.fr/promotions/" +
+        this.promotion._id +
+        "/groupes/" +
+        this.groupe._id +
+        "/equipes/" +
+        this.equipe._id+
+        "/eleves/"+
+        item.code;
+        console.log(baseURI);
       confirm("Are you sure you want to delete this item?") &&
-        this.eleves.splice(index, 1);
+        this.$http
+          .delete(baseURI)
+          .then(result => {
+            this.eleves.splice(index, 1);
+          })
+          .catch(error => {
+            console.log(error);
+          });
     },
 
     close() {

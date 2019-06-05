@@ -23,7 +23,7 @@
         <v-card>
           <v-subheader>Créer un template</v-subheader>
           <v-layout row wrap>
-            <v-flex xs12 sm5 md10>
+            <v-flex xs12 sm5 md10 ml-2>
               <v-text-field
                 v-model="newitem.nom"
                 label="Entrer le nom d’un nouveau template"
@@ -34,9 +34,9 @@
             <v-btn icon ripple @click="addItem(newitem)">
               <v-icon color="grey lighten-1">add_circle</v-icon>
             </v-btn>
-            <v-flex xs12 sm5 md10>
+            <v-flex xs12 sm5 md10 ml-2>
               <v-select
-                v-model="existingitem.nom"
+                v-model="existingitem.anciennom"
                 :items="templates"
                 item-text="nom"
                 label="Sélectionner un template existant"
@@ -58,7 +58,7 @@ export default {
   data() {
     return {
       newitem: { nom: "" },
-      existingitem: { nom: "" },
+      existingitem: { anciennom: "" },
       defaultitem: { nom: "" },
       templates: []
     };
@@ -88,9 +88,10 @@ export default {
     },
     addItem(item) {
       const baseURI = "http://bonapp.floriancomte.fr/templates";
+      const nouveaunom = item.anciennom +"-bis"
       this.$http
         .post(baseURI, {
-          nom: item.nom
+          nom: item.nom || nouveaunom
         })
         .then(result => {
           this.templates.push({nom: result.data.nom, _id: result.data._id});
