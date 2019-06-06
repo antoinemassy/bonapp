@@ -1,10 +1,10 @@
 <template>
   <v-container fluid grid-list-xl pt-0 pb-5>
     <v-layout row justify-space-around mt-3 mb-1 pt-0 mt-0 wrap>
-      <v-flex md2 xs4>
+      <v-flex md3 xs4>
         <v-card color="accent" class="white--text">
           <v-card-title class="justify-center" primary-title>
-            <div class="headline">Equipe {{equipe}}</div>
+            <div class="headline">Équipe {{equipe.nom}}</div>
           </v-card-title>
         </v-card>
       </v-flex>
@@ -62,7 +62,7 @@
                           v-for="item in editedItem.Notations"
                           :key="item.Notations"
                         >
-                          <span class="headline">{{item.eleve}}</span> 
+                          <span class="headline">{{item.eleve}}</span>
                           <v-textarea v-model="item.obs_ind" label="Observation individuelle"></v-textarea>
                           <v-select
                             v-model="item.niveau_actuel.nom"
@@ -111,12 +111,9 @@
 export default {
   data: () => ({
     items: ["Streaming", "Eating"],
-    chips: [
-      "Programming",
-      "Playing video games",
-      "Watching movies",
-      "Sleeping"
-    ],
+    equipe: {nom:"", _id:""},
+    groupe: {nom:"", _id:""},
+
     dialog: false,
     template: { nom: "Template 2020" },
     composante: { nom: "Compétences générales (Informatique et Télécom)" },
@@ -171,25 +168,39 @@ export default {
   },
 
   created() {
+    this.groupe._id = this.$route.params.idGroupe;
+    this.equipe._id = this.$route.params.idEquipe;
     this.initialize();
   },
 
-  
-
   methods: {
     initialize() {
+
+       const baseURI3 =
+        "http://bonapp.floriancomte.fr/promotions/" +
+        123 +
+        "/groupes/" +
+        this.groupe._id +
+        "/equipes/" +
+        this.equipe._id 
+        ;
+      this.$http.get(baseURI3).then(result => {
+        this.equipe.nom = result.data.nom
+        console.log(result.data);
+      });
+
       this.familles = [{ nom: "Agir en communiquant " }];
       this.composantes = [{ nom: "Compétences générales (Elec et Signal)" }];
-      this.equipe = "G1A";
+
       this.niveaux = [
         {
-          nom: "Non acquis",
+          nom: "Non acquis"
         },
         {
-          nom: "Loin",
+          nom: "Loin"
         },
         {
-          nom: "Proche",
+          nom: "Proche"
         }
       ];
       this.competences = [
@@ -230,7 +241,7 @@ export default {
               obs_ind: "nulllle",
               niveau_actuel: {
                 date: "01-23-1998",
-                nom:"forte",
+                nom: "forte",
                 niveau_id: 1
               },
               historique: [
@@ -264,7 +275,7 @@ export default {
               obs_ind: "niceuuuh",
               niveau_actuel: {
                 date: "01-23-1998",
-                nom:"Non acquis",
+                nom: "Non acquis",
                 niveau_id: 1
               },
               historique: [

@@ -12,7 +12,14 @@
 
     <v-layout row justify-center mt-1>
       <v-flex md2 xs4>
-        <v-select :items="promotions" item-text="name" label="Promotion" solo-inverted></v-select>
+        <v-select
+          @change="changedValue"
+          :items="promotions"
+          item-text="nom"
+          item-value="_id"
+          label="Promotion"
+          solo-inverted
+        ></v-select>
       </v-flex>
     </v-layout>
 
@@ -39,14 +46,14 @@
               :expand="expand"
               :search="search"
               hide-actions
-              item-key="name"
+              item-key="nom"
               class="elevation-1"
             >
               <template v-slot:items="props">
                 <td
                   class="text-xs-center"
                   @click="props.expanded = !props.expanded"
-                >{{ props.item.name }}</td>
+                >{{ props.item.nom }}</td>
                 <td class="text-xs-right">
                   <v-icon small class="mr-2" @click="test(props.item)">favorite</v-icon>
                 </td>
@@ -55,11 +62,14 @@
                 <v-btn color="primary" @click="initialize">Reset</v-btn>
               </template>
               <template v-slot:expand="props">
-                <router-link style="text-decoration:none" :to="{path: '/tuteur/groupes2'}">
-                  <v-card v-for="item in props.item.equipes" :key="item" flat>
-                    <v-card-text>{{ item }}</v-card-text>
-                  </v-card>
-                </router-link>
+                <v-card v-for="item in props.item.equipes" :key="item" flat>
+                  <router-link
+                    style="text-decoration:none"
+                    :to="{path: '/tuteur/groupes/' + props.item._id +'/equipe/'+item._id}"
+                  >
+                    <v-card-text>{{ item.nom }}</v-card-text>
+                  </router-link>
+                </v-card>
               </template>
             </v-data-table>
           </div>
@@ -75,13 +85,13 @@
 export default {
   data: () => ({
     search: "",
-    promotions: [{ name: "Promotion 2020" }, { name: "Promotion 2021" }],
+    promotions: [],
     headers: [
       {
         text: "Nom",
         align: "center",
         sortable: false,
-        value: "name"
+        value: "nom"
       },
       { text: "Actions", align: "right", value: "prenom", sortable: false }
     ],
@@ -93,21 +103,43 @@ export default {
   },
 
   methods: {
+    changedValue: function(value) {
+      //receive the value selected (return an array if is multiple)
+      console.log(value);
+      const baseURI2 =
+        "http://bonapp.floriancomte.fr/promotions/" + value + "/groupes";
+      this.$http
+        .get(baseURI2)
+        .then(result => {
+          console.log(result.data);
+          this.groupes = result.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+
     initialize() {
-      this.groupes = [
-        {
-          name: "G1",
-          equipes: ["G1A", "G1B", "G1C"]
-        },
-        {
-          name: "G2",
-          equipes: ["G2A"]
-        },
-        {
-          name: "G3",
-          equipes: ["G3A"]
-        }
-      ];
+      const baseURI = "http://bonapp.floriancomte.fr/promotions";
+      this.$http.get(baseURI).then(result => {
+        this.promotions = result.data;
+        console.log(this.promotions);
+      });
+
+      // this.groupes = [
+      //   {
+      //     nom: "G1",
+      //     equipes: ["G1A", "G1B", "G1C"]
+      //   },
+      //   {
+      //     nom: "G2",
+      //     equipes: ["G2A"]
+      //   },
+      //   {
+      //     nom: "G3",
+      //     equipes: ["G3A"]
+      //   }
+      // ];
     }
   }
 };

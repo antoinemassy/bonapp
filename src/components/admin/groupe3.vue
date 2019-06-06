@@ -110,7 +110,7 @@ export default {
   data: () => ({
     promotion: {},
     groupe: {},
-    equipe: { name: "G1A" },
+    equipe: {name:""},
     genres: [{ name: "M" }, { name: "F" }],
     dialog: false,
     headers: [
@@ -157,6 +157,8 @@ export default {
 
   methods: {
     initialize() {
+      
+
       const baseURI =
         "http://bonapp.floriancomte.fr/promotions/" + this.promotion._id;
       this.$http.get(baseURI).then(result => {
@@ -175,6 +177,19 @@ export default {
       this.$http.get(baseURI2).then(result => {
         console.log(result.data);
         this.eleves = result.data;
+      });
+
+      const baseURI3 =
+        "http://bonapp.floriancomte.fr/promotions/" +
+        this.promotion._id +
+        "/groupes/" +
+        this.groupe._id +
+        "/equipes/" +
+        this.equipe._id 
+        ;
+      this.$http.get(baseURI3).then(result => {
+        this.equipe.name = result.data.nom
+        console.log(result.data);
       });
       // this.eleves = [
       //   {
@@ -238,7 +253,31 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.eleves[this.editedIndex], this.editedItem);
+
+        const baseURI =
+          "http://bonapp.floriancomte.fr/promotions/" +
+          this.promotion._id +
+          "/groupes/" +
+          this.groupe._id +
+          "/equipes/" +
+          this.equipe._id +
+          "/eleves/"+
+          this.eleves[this.editedIndex].code;
+        this.$http
+          .patch(baseURI, {
+            prenom: this.editedItem.prenom,
+            nom: this.editedItem.nom,
+            code: this.editedItem.code,
+            genre: this.editedItem.genre
+          })
+          .then(result => {
+            Object.assign(this.eleves[this.editedIndex], this.editedItem);
+            
+          })
+          .catch(error => {
+            console.log(error);
+          });
+        
       } else {
         const baseURI =
           "http://bonapp.floriancomte.fr/promotions/" +

@@ -97,7 +97,7 @@ export default new VueRouter({
                     component: Groupes,
                 },
                 {
-                    path: '/tuteur/groupes2',
+                    path: '/tuteur/groupes/:idGroupe/equipe/:idEquipe',
                     name: 'Groupes2',
                     component: Groupes2,
                 }
