@@ -65,7 +65,7 @@
                 <v-card v-for="item in props.item.equipes" :key="item" flat>
                   <router-link
                     style="text-decoration:none"
-                    :to="{path: '/tuteur/groupes/' + props.item._id +'/equipe/'+item._id}"
+                    :to="{path: '/tuteur/promotions/'+ promotion_id+ '/groupes/' + props.item._id +'/equipe/'+item._id}"
                   >
                     <v-card-text>{{ item.nom }}</v-card-text>
                   </router-link>
@@ -84,6 +84,7 @@
 <script>
 export default {
   data: () => ({
+    promotion_id:"",
     search: "",
     promotions: [],
     headers: [
@@ -105,7 +106,8 @@ export default {
   methods: {
     changedValue: function(value) {
       //receive the value selected (return an array if is multiple)
-      console.log(value);
+      this.promotion_id = value;
+      console.log(this.promotion_id);
       const baseURI2 =
         "http://bonapp.floriancomte.fr/promotions/" + value + "/groupes";
       this.$http

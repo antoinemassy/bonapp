@@ -126,7 +126,8 @@ export default {
       famille: "",
       nom: "",
       description: "",
-      coefficient: 1
+      coefficient: 1,
+      observation:""
     },
     defaultItem: {
       famille: "",
@@ -295,11 +296,13 @@ export default {
           this.editedItem._id;
         this.$http
           .patch(baseURI, {
+            
             nom: this.editedItem.nom,
             coefficient: this.editedItem.coefficient,
-            description: this.editedItem.description
+            description: this.editedItem.description,
           })
           .then(result => {
+            console.log(this.editedItem)
             Object.assign(this.competences[this.editedIndex], this.editedItem);
            
           })

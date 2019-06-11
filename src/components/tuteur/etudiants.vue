@@ -55,7 +55,12 @@
                 <td class="text-xs-center">{{ props.item.groupe}}</td>
                 <td class="text-xs-center">{{ props.item.equipe}}</td>
                 <td class="text-xs-right">
-                  <v-icon small class="mr-2" @click="open(props.item)">open_in_new</v-icon>
+                  <router-link
+                    style="text-decoration:none"
+                    :to="{path: '/tuteur/promotions/'+ promotion_id + '/groupes/' + props.item._id +'/equipe/'+props.item.equipe_id}"
+                  >
+                  <v-icon small class="mr-2">open_in_new</v-icon>
+                  </router-link>
                 </td>
               </template>
               <template v-slot:no-data>
@@ -75,6 +80,7 @@
 export default {
   data: () => ({
     search: "",
+    promotion_id:"",
     promotions: [],
     headers: [
       {
@@ -133,6 +139,7 @@ export default {
 
   methods: {
     changedValue: function(value) {
+      this.promotion_id = value;
       //receive the value selected (return an array if is multiple)
       console.log(value);
       this.etudiants=[]
@@ -141,6 +148,7 @@ export default {
       this.$http
         .get(baseURI2)
         .then(result => {
+          console.log(result.data)
           this.groupes= result.data;
           for (var i = 0, len = this.groupes.length; i < len; i++) {
             for (var j = 0, len2 = this.groupes[i]["equipes"].length; j < len2; j++){
@@ -148,11 +156,12 @@ export default {
                   let etudiant = this.groupes[i]["equipes"][j]["eleves"][k];
                   etudiant["groupe"] = this.groupes[i].nom
                   etudiant["equipe"] = this.groupes[i]["equipes"][j].nom
+                  etudiant["equipe_id"] = this.groupes[i]["equipes"][j]._id
                   this.etudiants.push(etudiant)
               }
             }
           }
-          
+          console.log(this.etudiants)
           
         })
         .catch(error => {
