@@ -64,8 +64,8 @@ export default {
       newitem: { nom: "", template: "" },
       existingitem: { title: "", template: "" },
       defaultitem: { title: "", template: "" },
-      promotions: [{ title: "promotest", template: "2020" }],
-      templates: [{ title: "2020" }, { title: "2021" }]
+      promotions: [],
+      templates: []
     };
   },
   created() {

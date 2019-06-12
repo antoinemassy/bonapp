@@ -4,7 +4,7 @@
       <v-flex md3 xs4>
         <v-card color="accent" class="white--text">
           <v-card-title class="justify-center" primary-title>
-            <div class="headline">Équipe {{equipe.nom}}</div>
+            <div class="headline">{{equipe.nom}}</div>
           </v-card-title>
         </v-card>
       </v-flex>
@@ -83,9 +83,7 @@
                 <td class="text-xs-center">{{ props.item.description }}</td>
                 <td class="text-xs-center">{{ props.item.observation }}</td>
                 <td class="text-xs-center">{{ props.item.coefficient }}</td>
-                <td class="justify-center layout px-4">
-                  <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
-                </td>
+                
               </template>
               <template v-slot:no-data>
                 <v-btn color="primary" @click="initialize">Reset</v-btn>
@@ -103,13 +101,16 @@
 <script>
 export default {
   data: () => ({
+    eleve:{},
     items: ["Streaming", "Eating"],
     equipe: { nom: "", _id: "" },
     groupe: { nom: "", _id: "" },
     promotion: {_id: "" },
+    niveaux:[],
+    semestres:[],
+    template:{},
 
     dialog: false,
-    template: { nom: "Template 2020" },
     composante: { nom: "Compétences générales (Informatique et Télécom)" },
     headers: [
       {
@@ -138,8 +139,7 @@ export default {
       },
       { text: "Description",align: "center", value: "description" ,sortable: false,},
       { text: "Observation sur l'équipe", value: "observationEquipe" ,sortable: false,},
-      { text: "Coefficient", value: "coefficient" ,sortable: false,},
-      { text: "Actions", align: "right", value: "nom", sortable: false }
+      { text: "Coefficient", value: "coefficient" ,sortable: false,}
     ],
     competences: [],
     editedIndex: -1,
@@ -172,31 +172,25 @@ export default {
   },
 
   created() {
-    this.groupe._id = this.$route.params.idGroupe;
-    this.equipe._id = this.$route.params.idEquipe;
-    this.promotion._id = this.$route.params.idPromotion;
+    
+    this.eleve._id = this.$route.params.idEleve
     this.initialize();
   },
 
   methods: {
     initialize() {
       const baseURI3 =
-        "http://bonapp.floriancomte.fr/promotions/" +
-        this.promotion._id +
-        "/groupes/" +
-        this.groupe._id +
-        "/equipes/" +
-        this.equipe._id;
+        "http://bonapp.floriancomte.fr/eleves/" +
+        this.eleve._id
       this.$http.get(baseURI3).then(result => {
-        this.equipe.nom = result.data.nom;
+        this.equipe.nom = result.data.equipe;
+        this.promotion._id = result.data.promotion;
         console.log(result.data);
-      });
-
-      const baseURI =
+              const baseURI =
         "http://bonapp.floriancomte.fr/promotions/" +
         this.promotion._id 
       this.$http.get(baseURI).then(result => {
-        console.log(result.data.template);
+        console.log(result.data);
         for (var i = 0; i < result.data.template.semestres.length; i++) {
           for (var j = 0; j < result.data.template.semestres[i].composantes.length; j++) {
             for (var k = 0; k < result.data.template.semestres[i].composantes[j].familles.length; k++) {
@@ -275,15 +269,11 @@ export default {
                   }
                 }
               });
-
-      const baseURI2 =
-        "http://bonapp.floriancomte.fr/promotions/" +
-        this.promotion._id 
-      this.$http.get(baseURI2).then(result => {
-        this.niveaux = result.data.template.niveaux
-        console.log(result.data.template.niveaux);
-
       });
+       
+
+
+     
 
 
 

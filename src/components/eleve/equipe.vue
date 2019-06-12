@@ -20,14 +20,7 @@
         </v-flex>
       </v-layout>
 
-      <v-layout row justify-center mb-0 pt-0 mt-2>
-        <v-flex md2 xs4>
-          <v-select :items="promotions" item-text="name" label="Promotion" solo-inverted></v-select>
-        </v-flex>
-        <v-flex md2 xs4>
-          <v-select :items="equipes" item-text="name" label="Equipe" solo-inverted></v-select>
-        </v-flex>
-      </v-layout>
+      
 
       <v-layout wrap>
         <v-flex v-for="n in etudiants" :key="n" xs12 md4 mb-4>
@@ -199,7 +192,7 @@ export default {
       switch1(newValue){
         //called whenever switch1 changes
         if(newValue==="Ensemble"){
-          this.$router.push('/admin/equipe2');
+          this.$router.push('/eleve/equipe2');
         }
       }
     },

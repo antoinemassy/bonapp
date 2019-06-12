@@ -107,9 +107,7 @@ export default {
       if (this.nom && this.mdp === "tuteur") {
         this.$router.push("/tuteur/profil");
       }
-      console.log(this.nom)
-      if (this.etudiants.includes(this.nom)  && this.mdp === "eleve") {
-        
+      if ((this.etudiants.includes(this.nom))  && this.mdp === "eleve") {
         this.$router.push("/eleve/"+  this.nom + "/profil");
       }
     }

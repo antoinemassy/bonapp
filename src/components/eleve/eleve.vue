@@ -19,7 +19,7 @@
       </v-list>
 
       <v-list dense>
-        <v-list-tile @click.stop="left = !left" :to="{path: '/eleve/' + this.eleve._id +'/fiches'}">
+        <v-list-tile @click.stop="left = !left" :to="{path: '/eleve/' + this.eleve._id +'/fiches' }">
           <v-list-tile-action>
             <v-icon>assignment</v-icon>
           </v-list-tile-action>
@@ -30,7 +30,7 @@
       </v-list>
 
       <v-list dense>
-        <v-list-tile @click.stop="left = !left">
+        <v-list-tile @click.stop="left = !left" :to="{path: '/eleve/equipe'}">
           <v-list-tile-action>
             <v-icon>people_outline</v-icon>
           </v-list-tile-action>

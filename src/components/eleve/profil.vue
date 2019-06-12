@@ -12,7 +12,7 @@
         <v-flex xs12 sm6 md2>
           <v-text-field
             label="Prenom"
-            value="eleve"
+            v-model="prenom"
             box
             readonly
           ></v-text-field>
@@ -25,12 +25,11 @@
         <v-flex xs12 sm6 md2>
           <v-text-field
             label="Nom"
-            value="eleve"
+            v-model="nom"
             box
             readonly
           ></v-text-field>
         </v-flex>
-
       </v-layout>
 </v-container>
 </template>
@@ -40,18 +39,26 @@
 export default {
   data: () => ({
     eleve:{},
+    nom:"",
+    prenom:""
   }),
 
   
 
   created() {
     this.eleve._id = this.$route.params.idEleve;
-    this.initialize();
+    const baseURI3 =
+        "http://bonapp.floriancomte.fr/eleves/" +
+        this.eleve._id
+      this.$http.get(baseURI3).then(result => {
+        this.nom =result.data.nom
+        this.prenom =result.data.prenom
+        console.log(this.eleve.nom)
+    })
   },
   methods: {
     initialize() {
-        console.log(this.eleve._id)
-    }
+      }
     
   }
 

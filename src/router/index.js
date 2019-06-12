@@ -20,6 +20,10 @@ import Groupes2 from '../components/tuteur/groupes2.vue'
 import Eleve from '../components/eleve/eleve.vue'
 import ProfilEleve from '../components/eleve/profil.vue'
 import Fiches from '../components/eleve/fiches.vue'
+import Equipe_eleve from '../components/eleve/equipe.vue'
+import Equipe2_eleve from '../components/eleve/equipe2.vue'
+import Equipe_tuteur from '../components/tuteur/equipe.vue'
+import Equipe2_tuteur from '../components/tuteur/equipe2.vue'
 
 
 Vue.use(VueRouter)
@@ -111,6 +115,16 @@ export default new VueRouter({
                     path: '/tuteur/promotions/:idPromotion/groupes/:idGroupe/equipe/:idEquipe',
                     name: 'Groupes2',
                     component: Groupes2,
+                },
+                {
+                    path: '/tuteur/equipe',
+                    name: 'Equipe_tuteur',
+                    component: Equipe_tuteur,
+                },
+                {
+                    path: '/tuteur/equipe2',
+                    name: 'Equipe2_tuteur',
+                    component: Equipe2_tuteur,
                 }
             ]
         },
@@ -123,12 +137,24 @@ export default new VueRouter({
                 path: '/eleve/:idEleve/profil',
                 name: 'ProfilEleve',
                 component: ProfilEleve,
+                props: true 
             },
             {
                 path: '/eleve/:idEleve/fiches',
-                name: 'ProfilEleve',
-                component: Fiches,
-            }]
+                name: 'FichesEleve',
+                component: Fiches
+            },
+            {
+                path: '/eleve/equipe',
+                name: 'Equipe_eleve',
+                component: Equipe_eleve,
+            },
+            {
+                path: '/eleve/equipe2',
+                name: 'Equipe2_eleve',
+                component: Equipe2_eleve,
+            }
+        ]
         },
     ]
 })

@@ -13,7 +13,7 @@
       <v-flex md3>
         <v-card color="accent" class="white--text">
           <v-card-title class="justify-center" primary-title>
-            <div class="headline">Équipe {{equipe.name}}</div>
+            <div class="headline">{{equipe.name}}</div>
           </v-card-title>
         </v-card>
       </v-flex>

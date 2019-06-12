@@ -125,7 +125,7 @@ export default {
         //called whenever switch1 changes
         
         if(newValue==="Synthèse"){
-          this.$router.push('/admin/equipe');
+          this.$router.push('/tuteur/equipe');
         }
       }
     }

@@ -4,7 +4,7 @@
       <v-flex md3 xs4>
         <v-card color="accent" class="white--text">
           <v-card-title class="justify-center" primary-title>
-            <div class="headline">Équipe {{equipe.nom}}</div>
+            <div class="headline">{{equipe.nom}}</div>
           </v-card-title>
         </v-card>
       </v-flex>
@@ -196,7 +196,7 @@ export default {
         "http://bonapp.floriancomte.fr/promotions/" +
         this.promotion._id 
       this.$http.get(baseURI).then(result => {
-        console.log(result.data.template);
+        console.log(result.data);
         for (var i = 0; i < result.data.template.semestres.length; i++) {
           for (var j = 0; j < result.data.template.semestres[i].composantes.length; j++) {
             for (var k = 0; k < result.data.template.semestres[i].composantes[j].familles.length; k++) {

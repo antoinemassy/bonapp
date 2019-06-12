@@ -52,7 +52,7 @@
       </v-list>
 
       <v-list dense>
-        <v-list-tile @click.stop="left = !left">
+        <v-list-tile @click.stop="left = !left" :to="{path: '/tuteur/equipe'}">
           <v-list-tile-action>
             <v-icon>people_outline</v-icon>
           </v-list-tile-action>
