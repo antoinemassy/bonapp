@@ -189,7 +189,8 @@ export default {
                 result.data[i].competences[j].description ||
                 "Pas de description",
               coefficient: result.data[i].competences[j].coefficient || 1,
-              _id: result.data[i].competences[j]._id
+              _id: result.data[i].competences[j]._id,
+              observation: result.data[i].competences[j].observation
             });
           }
         }
@@ -300,6 +301,7 @@ export default {
             nom: this.editedItem.nom,
             coefficient: this.editedItem.coefficient,
             description: this.editedItem.description,
+            observation: this.editedItem.observation
           })
           .then(result => {
             console.log(this.editedItem)

@@ -8,7 +8,7 @@
     
     <v-navigation-drawer v-model="drawer" fixed app close  >
       <v-list dense>
-        <v-list-tile @click.stop="left = !left" :to="{path: '/eleve/profil'}">
+        <v-list-tile @click.stop="left = !left" :to="{path: '/eleve/' + this.eleve._id +'/profil'}">
           <v-list-tile-action>
             <v-icon>person</v-icon>
           </v-list-tile-action>
@@ -19,7 +19,7 @@
       </v-list>
 
       <v-list dense>
-        <v-list-tile @click.stop="left = !left">
+        <v-list-tile @click.stop="left = !left" :to="{path: '/eleve/' + this.eleve._id +'/fiches'}">
           <v-list-tile-action>
             <v-icon>assignment</v-icon>
           </v-list-tile-action>
@@ -64,11 +64,20 @@ export default {
     drawer: false,
     drawerRight: null,
     right: false,
-    left: false
+    left: false,
+    eleve:{}
   }),
   props: {
     source: String
   },
   name: "app"
+  ,
+
+  
+
+  created() {
+    this.eleve._id = this.$route.params.idEleve;
+    
+  },
 };
 </script>

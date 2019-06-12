@@ -65,7 +65,7 @@
                 <v-card v-for="item in props.item.equipes" :key="item" flat>
                   <router-link
                     style="text-decoration:none"
-                    :to="{path: '/tuteur/promotions/'+ promotion_id+ '/groupes/' + props.item._id +'/equipe/'+item._id}"
+                    :to="{path: '/tuteur/promotions/'+ promotion_id+ '/groupes/' + props.item._id +'/equipe/'+item._id, props: { newsletterPopup: false }}"
                   >
                     <v-card-text>{{ item.nom }}</v-card-text>
                   </router-link>

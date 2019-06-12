@@ -38,6 +38,22 @@
 
 <script>
 export default {
-  data: () => ({})
+  data: () => ({
+    eleve:{},
+  }),
+
+  
+
+  created() {
+    this.eleve._id = this.$route.params.idEleve;
+    this.initialize();
+  },
+  methods: {
+    initialize() {
+        console.log(this.eleve._id)
+    }
+    
+  }
+
 };
 </script>

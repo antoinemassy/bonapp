@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../components/login.vue'
+import NotFound from '../components/NotFound.vue'
 import Admin from '../components/admin/admin.vue'
 import ProfilAdmin from '../components/admin/profil.vue'
 import Template from '../components/admin/template.vue'
@@ -18,11 +19,21 @@ import Groupes from '../components/tuteur/groupes.vue'
 import Groupes2 from '../components/tuteur/groupes2.vue'
 import Eleve from '../components/eleve/eleve.vue'
 import ProfilEleve from '../components/eleve/profil.vue'
+import Fiches from '../components/eleve/fiches.vue'
 
 
 Vue.use(VueRouter)
 export default new VueRouter({
-    routes: [{
+    routes: [
+        {
+            path: '/404',
+            component: NotFound
+        },
+        {
+            path: '*',
+            redirect: '/404'
+        },
+        {
             path: '/',
             name: 'Login',
             component: Login
@@ -94,7 +105,7 @@ export default new VueRouter({
                 {
                     path: '/tuteur/groupes',
                     name: 'Groupes',
-                    component: Groupes,
+                    component: Groupes
                 },
                 {
                     path: '/tuteur/promotions/:idPromotion/groupes/:idGroupe/equipe/:idEquipe',
@@ -109,11 +120,15 @@ export default new VueRouter({
             name: 'Eleve',
             component: Eleve,
             children: [{
-                    path: '/eleve/profil',
-                    name: 'ProfilEleve',
-                    component: ProfilEleve,
-                }
-            ]
+                path: '/eleve/:idEleve/profil',
+                name: 'ProfilEleve',
+                component: ProfilEleve,
+            },
+            {
+                path: '/eleve/:idEleve/fiches',
+                name: 'ProfilEleve',
+                component: Fiches,
+            }]
         },
     ]
 })
