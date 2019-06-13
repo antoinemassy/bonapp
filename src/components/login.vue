@@ -58,7 +58,6 @@ export default {
         .get(baseURI)
         .then(result => {
           for (var i = 0, len = result.data.length; i < len; i++) {
-            console.log(result.data[i]);
             const baseURI2 =
               "http://bonapp.floriancomte.fr/promotions/" +
               result.data[i]._id +
@@ -89,7 +88,6 @@ export default {
                     }
                   }
                 }
-                console.log(this.etudiants);
               })
               .catch(error => {
                 console.log(error);

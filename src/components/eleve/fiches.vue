@@ -185,12 +185,10 @@ export default {
       this.$http.get(baseURI3).then(result => {
         this.equipe.nom = result.data.equipe;
         this.promotion._id = result.data.promotion;
-        console.log(result.data);
               const baseURI =
         "http://bonapp.floriancomte.fr/promotions/" +
         this.promotion._id 
       this.$http.get(baseURI).then(result => {
-        console.log(result.data);
         for (var i = 0; i < result.data.template.semestres.length; i++) {
           for (var j = 0; j < result.data.template.semestres[i].composantes.length; j++) {
             for (var k = 0; k < result.data.template.semestres[i].composantes[j].familles.length; k++) {
