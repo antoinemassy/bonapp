@@ -53,7 +53,6 @@ export default {
       this.$http.get(baseURI3).then(result => {
         this.nom =result.data.nom
         this.prenom =result.data.prenom
-        console.log(this.eleve.nom)
     })
   },
   methods: {
